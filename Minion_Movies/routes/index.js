@@ -1,9 +1,4 @@
-
-/*
- * GET home page.
- */
-
-
+// connect to mySQL data base
 var mysql = require('mysql');
 var connection = mysql.createConnection({
 	host: 'cis550courseproject.cojm56uytqf8.us-east-1.rds.amazonaws.com',
@@ -13,7 +8,7 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 
-
+// query for movies over the database
 exports.getMovies = function(req, res){
 
 	var query1 = "select * from MOVIES limit 20";
@@ -30,24 +25,29 @@ exports.getMovies = function(req, res){
 	
 };
 
+// sample query #1
 exports.getReviews = function(req, res){
 
 	var query1 = "select * "
 	
 };
 
+// sample query #2
 exports.about = function(req, res){
 
 	res.render('about.ejs', { title: "about", message: "this is about page...", date: new Date()  });
 	
 };
 
+// sample query #3
 exports.contact = function(req, res){
 
 	res.render('contact.ejs', { title: "contact", message: "this is contact page...", date: new Date()  });
 	
 };
 
+
+// sample query #4
 exports.results = function(req, res){
 	
 		var query = connection.query('select * from REVIEWS', function(err, result){
