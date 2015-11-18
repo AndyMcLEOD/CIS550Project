@@ -6,8 +6,8 @@ var connection = mysql.createConnection({
 	password: '1234567890',
 	database: 'MinionMovies'
 });
-connection.connect();
 
+connection.connect();
 // query for movies over the database
 exports.getMovies = function(req, res){
 
@@ -36,14 +36,11 @@ exports.getReviews = function(req, res){
 exports.about = function(req, res){
 
 	res.render('about.ejs', { title: "about", message: "this is about page...", date: new Date()  });
-	
 };
 
 // sample query #3
 exports.contact = function(req, res){
-
 	res.render('contact.ejs', { title: "contact", message: "this is contact page...", date: new Date()  });
-	
 };
 
 
@@ -51,15 +48,11 @@ exports.contact = function(req, res){
 exports.results = function(req, res){
 	
 		var query = connection.query('select * from REVIEWS', function(err, result){
-			
 		console.log(query.sql);
-		
-		if(err){
+		if(err) {
 			console.error(err);
 			return;
 		}
-		
 		res.render('result.ejs', { results: result});
-	
 	});
 };
