@@ -5,13 +5,13 @@
   <title>Minion Movies</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
-  <link rel="stylesheet" href="stylesheets/bootstrap.css">
-  <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/style.css">
   <script src="js/bootstrap.min.js"></script>
   <script src="js/jquery.js"></script>
   <script src="js/bootstrap.js"></script>
   <style>
-    body    { padding-top:80px; }
+    body    { padding-top: 50px; }
   </style>
 </head>
 <body>
@@ -26,7 +26,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="http://www.imdb.com/name/nm0065743/"> Movies <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="/ "> Movies <span class="sr-only">(current)</span></a></li>
             <li><a href="/people"> People </a></li>
             <li><a href="/reviews"> Reviews </a></li>
             <li><a href="/classification"> Classification </a></li>
@@ -64,30 +64,28 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-    <!-- Reviews: 每个divider 显示一个review tuple。 -->
+    <!-- Reviews: every div shows one review tuple。 -->
     <div class="container">
       <div class="well">
-        <button class="btn btn-primary bt-xs"><h3><i class="fa fa-circle"></i> <%= movies["TITLE_YEAR"] %></h3></button>
+        <h1><i class="fa fa-circle"></i> <%= movies["TITLE_YEAR"] %></h1>
         <span class="image">
-          <img src = <%= movies["POSTER"] %> alt = <%= movies["TITLE_YEAR"] %> />
-          <p><strong>Name: </strong> <%= movies["TITLE_YEAR"] %></p>
-          <p><strong>Release date: </strong> <%= movies["RELEASE_DATE"] %></p>
-          <p><strong>Runtime: </strong> <%= movies["RUNTIME"] %> &nbsp;mins</p>
-          <p><strong>Genres: </strong> <%= genres %></p>
-          <p><strong>MPAA: </strong> <%= movies["MPAA"] %></p>
-          <p><strong>Popularity: </strong> <%= movies["POPULARITY"] %>(people like)</p>
-          <p><strong>Rating: </strong> <%= movies["TMDB_RATING"] %>/10(TMDB) | <%= movies["MOVIELEN_RATING"] %>/5(Movie Len) | <%= movies["RT_CRITIC_RATING"] %>/100(Rotten tomatoes' Critics) | <%= movies["RT_AUDIENCE_RATING"] %>/100(Rotten tomatoes' audience) </p>
-          <p><strong>Tag(<%= movies["TAG_NUM"] %>): </strong> <%= tags%> </p>
-          <p> <strong>Overview: </strong><%= movies["OVERVIEW"] %></p>
-
-          
+            <img class="poster" src = <%= movies["POSTER"] %> alt = <%= movies["TITLE_YEAR"] %>/>
+            <p><strong>Name: </strong> <%= movies["TITLE_YEAR"] %></p>
+            <p><strong>Release date: </strong> <%= movies["RELEASE_DATE"] %></p>
+            <p><strong>Runtime: </strong> <%= movies["RUNTIME"] %> mins</p>
+            <p><strong>Genres: </strong> <%= genres %></p>
+            <p><strong>MPAA: </strong> <%= movies["MPAA"] %></p>
+            <p><strong>Popularity: </strong> <%= movies["POPULARITY"] %>(people like)</p>
+            <p><strong>Rating: </strong> <%= movies["TMDB_RATING"] %>/10(TMDB) | <%= movies["MOVIELEN_RATING"] %>/5(Movie Len) | <%= movies["RT_CRITIC_RATING"] %>/100(Rotten tomatoes' Critics) | <%= movies["RT_AUDIENCE_RATING"] %>/100(Rotten tomatoes' audience) </p>
+            <p><strong>Tag(<%= movies["TAG_NUM"] %>): </strong> <%= tags%> </p>
+            <p><strong>Overview: </strong><%= movies["OVERVIEW"] %></p>  
         </span>
       </div>
       <div class="well">
-        <button class="btn btn-danger bt-xs"><h3><span class="fa fa-youtube-play"></span> Trailer: </h3></button>
+        <button class="btn btn-danger bt-xs"><h3><span class="fa fa-youtube-play"></span> Trailer </h3></button>
       </div>
       <div class="well">
-        <button class="btn btn-info bt-xs"><h3><span class="fa fa-comments"></span> Review: </h3></button>
+        <button class="btn btn-info bt-xs"><h3><span class="fa fa-comments"></span> Review </h3></button>
       </div>
     </div>
      

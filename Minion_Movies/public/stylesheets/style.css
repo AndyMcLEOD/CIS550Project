@@ -1,28 +1,55 @@
 body {
-  background: url("http://orig11.deviantart.net/b6a3/f/2011/157/7/d/background_by_dilshan91-d3i95ek.jpg");
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background: url("http://orig11.deviantart.net/b6a3/f/2011/157/7/d/background_by_dilshan91-d3i95ek.jpg");
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 img {
-  display: inline-block;
-  margin: 20px;
-  margin-left: 50px;
-  margin-top: 40px;
-  width: 160px;
+    display: inline-block;
+    margin: 20px;
+    margin-left: 50px;
+    margin-top: 40px;
+    width: 160px;
 }
 
 .image { 
-   position: relative; 
+    position: relative; 
 }
 
 .link { 
-   position: absolute; 
-   top: 150px; 
-   left: 50px; 
-   margin-right: 20px; 
+    position: absolute; 
+    top: 150px; 
+    left: 50px; 
+    margin-right: 20px; 
 }
 
 select {
-	margin-top: 6px;
+    margin-top: 6px;
+}
+
+/*i { 
+    position: absolute; 
+    top: 0px;
+    left: 110px; 
+}
+*/
+
+body > div {
+    margin-top: 50px;
+}
+
+h1 {
+  text-align: center;
+  size: 3;
+}
+
+.poster {
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h3 {
+    color: rgb(255, 255, 255);
 }
