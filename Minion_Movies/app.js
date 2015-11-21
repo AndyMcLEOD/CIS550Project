@@ -30,8 +30,9 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.getMovies);
+
 app.get('/movies/:id', routes.movieDetails);
+app.get('/', routes.getMovies);
 app.get('/artists', routes.getArtists);
 app.get('/artists/:id', routes.artistDetails);
 app.get('/reviews', routes.getReviews);
