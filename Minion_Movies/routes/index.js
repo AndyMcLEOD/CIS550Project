@@ -16,7 +16,8 @@ connection.connect();
 
 exports.getMovies = function(req, res){
 
-	var query1 = "select * from MOVIES where POSTER <> '' order by RAND() desc limit 20";
+	var query1 = "select * from MOVIES where POSTER <> '' " + 
+				 " and POSTER <> 'None' order by RAND() desc limit 20";
 	//change to be ordered by popularity for demo.
 	connection.query(query1, function(err, movies){
 		if(err)
@@ -43,8 +44,10 @@ exports.movieDetails = function(req, res){
 				+ " and mg1.IMDB <> mg2.IMDB and mg1.IMDB = " + mid + "  LIMIT 4";
 	connection.query(query1, function(err, movies){		      		//query MOVIES
 		if(err) throw err;
+		console.log(query1);
 		connection.query(query2, function(err, genres){            //GENRES
 			if(err) throw err;
+			console.log(query2);
 			if(genres.length > 0){
 				var genre = genres[0]["GENRE"];
 				for(var i = 1; i < genres.length; i++){ genre = genre + " | " + genres[i]["GENRE"]; }}
@@ -64,8 +67,12 @@ exports.movieDetails = function(req, res){
 					var temp = connection.query(query5, function(err, actors){
 						console.log(temp.sql);
 						if(err) throw err;
+						console.log("=========actors===========");
+						console.log(actors);
 						connection.query(query6, function(err, trailers){
 							if(err) throw err;
+							console.log("=========actors===========");
+							console.log(actors);
 							connection.query(query7, function(err, reviews){
 								if(err) throw err;
 								connection.query(query8, function(err, recommendations){
@@ -106,6 +113,7 @@ exports.artistDetails = function(req, res){
 	var query3 = "select m.MOVIE_ID, ma.CHARACTER, ma.TITLE, m.POSTER "
 				+ " from movies_actors1 ma inner join MOVIES m on ma.IMDBID = m.MOVIE_ID "
 				+ " where PERSON_ID = " + aid + " limit 8";
+	
 	connection.query(query1, function(err, artist){
 		if(err) throw err;
 		connection.query(query2, function(err, aliases){
