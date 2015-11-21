@@ -53,3 +53,19 @@ h1 {
 h3 {
     color: rgb(255, 255, 255);
 }
+
+p {
+    display: inline-block;
+}
+
+.para {
+    margin-left: 40px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 150%;
+    width: 60%;
+}
+
+.review {
+    margin-left: 40px;
+}

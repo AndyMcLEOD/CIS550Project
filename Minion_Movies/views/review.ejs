@@ -7,9 +7,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!-- load fontawesome -->
   <link rel="stylesheet" href="stylesheets/bootstrap.css">
   <link rel="stylesheet" href="stylesheets/style.css">
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/jquery.js"></script>
-  <script src="js/bootstrap.js"></script>
   <style>
     body    { padding-top:80px; }
   </style>
@@ -66,7 +63,7 @@
 
 
 
-    <!-- Reviews: 每个divider 显示一个review tuple。 -->
+    <!-- Reviews: every div shows one review tuple -->
     <% for(var i = 0;i < reviews.length; i++){ %>
       <% var reviewLink = "/review/" + reviews[i]["REVIEW_ID"]%>
       <% var movieLink = "/movies/" + reviews[i]["IMDB"]%>
@@ -74,13 +71,22 @@
       <div class="well">
 
          <a href=<%= reviewLink %>><h1><span class="fa fa-comments"></span> Review for <i><strong><%= reviews[i]["TITLE"]%></strong></i></h1></a>
-         <p>
-            <p><a href=<%= movieLink %>><img class="review_poster" src = <%= reviews[i]["POSTER"] %> /></a></p>
-            <%= reviews[i]["QUOTE"]%>
-            <p>------<%= reviews[i]["CRITIC"]%></p>
-         </p>
+         <div class="review">
+            <p>
+              <a href=<%= movieLink %>><img class="review_poster" src = <%= reviews[i]["POSTER"] %> /></a>
+            </p>
+            <p class="para">
+              <%= reviews[i]["QUOTE"]%>
+              <br>
+              <br>
+              ------<%= reviews[i]["CRITIC"]%>
+            </p>
+         </div>
       </div>
     </div>
     <% } %>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/jquery.js"></script>
+<script src="../../js/bootstrap.js"></script> 
 </body>
 </html>
