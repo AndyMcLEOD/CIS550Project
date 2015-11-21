@@ -33,6 +33,8 @@ if ('development' == app.get('env')) {
 app.get('/', routes.getMovies);
 app.get('/movies/:id', routes.movieDetails);
 app.get('/reviews', routes.getReviews);
+app.get('/classification', routes.get_classes);
+
 //app.get('/contact', routes.contact);
 //app.get('/result', routes.results);
 
