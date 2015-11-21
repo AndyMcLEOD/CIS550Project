@@ -4,7 +4,7 @@
 <head>
   <title>Minion Movies</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!-- load fontawesome -->
   <link rel="stylesheet" href="stylesheets/bootstrap.css">
   <link rel="stylesheet" href="stylesheets/style.css">
   <script src="js/bootstrap.min.js"></script>
@@ -27,7 +27,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
-            <li><a href="/people"> People </a></li>
+            <li><a href="/artists"> Artists </a></li>
             <li class="active"><a href="/reviews"> Reviews </a></li>
             <li><a href="/classification"> Classification </a></li>
             <li><a href="/trailers"> Trailers </a></li>
@@ -65,12 +65,22 @@
     </nav>
 
 
+
     <!-- Reviews: 每个divider 显示一个review tuple。 -->
-    <div class="col-sm-6">
+    <% for(var i = 0;i < reviews.length; i++){ %>
+      <% var reviewLink = "/review/" + reviews[i]["REVIEW_ID"]%>
+      <% var movieLink = "/movies/" + reviews[i]["IMDB"]%>
+      <div class="container">
       <div class="well">
-         <h1><span class="fa fa-comments"></span> Review for</h1>
-        <a href="/auth/msg" class = "btn btn-default"> GO </a>
+
+         <a href=<%= reviewLink %>><h1><span class="fa fa-comments"></span> Review for <i><strong><%= reviews[i]["TITLE"]%></strong></i></h1></a>
+         <p>
+            <p><a href=<%= movieLink %>><img class="review_poster" src = <%= reviews[i]["POSTER"] %> /></a></p>
+            <%= reviews[i]["QUOTE"]%>
+            <p>------<%= reviews[i]["CRITIC"]%></p>
+         </p>
       </div>
     </div>
+    <% } %>
 </body>
 </html>

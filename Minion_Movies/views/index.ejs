@@ -4,12 +4,12 @@
 <head>
   <title>Minion Movies</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!-- load fontawesome -->
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/style.css">
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/jquery.js"></script>
-  <script src="js/bootstrap.js"></script>
+  <script src="../../js/bootstrap.min.js"></script>
+  <script src="../../js/jquery.js"></script>
+  <script src="../../js/bootstrap.js"></script>
   <style>
     body    { padding-top: 50px; }
   </style>
@@ -27,7 +27,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
-            <li><a href="/people"> People </a></li>
+            <li><a href="/artists"> Artists </a></li>
             <li><a href="/reviews"> Reviews </a></li>
             <li><a href="/classification"> Classification </a></li>
             <li><a href="/trailers"> Trailers </a></li>
@@ -64,8 +64,7 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-
-     <% for(var i = 0; i < 20; i++){ %>
+    <% for(var i = 0; i < 20; i++){ %>
         <% var id = movies[i]["MOVIE_ID"]%>
         <% var link = "/movies/" + movies[i]["MOVIE_ID"] %>
       <span class="image">
@@ -73,7 +72,7 @@
           <img src = <%= movies[i]["POSTER"] %> alt = <%= movies[i]["TITLE_YEAR"] %> />
         </a>
         <a href = <%= link %> class="link"><%= movies[i]["TITLE_YEAR"] %></a>
-<!--         <i class="fa fa-youtube-play fa-3x"></i> -->
+        <!--         <i class="fa fa-youtube-play fa-3x"></i> -->
       </span>
     <% } %> 
 </body>
