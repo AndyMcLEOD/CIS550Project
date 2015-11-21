@@ -148,6 +148,23 @@ exports.getReviews = function(req, res){
 	
 };
 
+exports.reviewDetails = function(req, res){
+	var rid = req.params.id;
+	var query1 = "select * from REVIEWS r inner join MOVIES m on r.IMDB = m.MOVIE_ID "
+				 + " WHERE r.REVIEW_ID = " + rid;
+
+	connection.query(query1, function(err, review){
+		console.log(query1);
+		var query2 = "select * from REVIEWS where IMDB = " + review[0]["IMDB"] + " and REVIEW_ID <> " + rid;
+		console.log(query2);
+		connection.query(query2, function(err, otherReviews){
+			res.render('reviewDetails', { isLogin: false,
+										review: review[0],
+										otherReviews: otherReviews });
+		});
+	});
+}
+
 exports.about = function(req, res){
 
 	res.render('about.ejs', { title: "about", message: "this is about page...", date: new Date()  });

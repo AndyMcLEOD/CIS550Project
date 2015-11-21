@@ -98,6 +98,7 @@
             <p><a href=<%= imdbLink %>> <strong> More details... </strong> </a></p>
         </span>
       </div>
+
       <div class="well">
         <button class="btn btn-danger bt-xs"><h3><span class="fa fa-youtube-play"></span> Trailer </h3></button>
         <p>
@@ -128,7 +129,8 @@
       </div>
 
       <div class="well">
-        <button class="btn btn-info bt-xs"><h3><span class="fa fa-comments"></span> Review </h3></button>
+        <a href='/reviews'><button class="btn btn-info bt-xs"><h3><span class="fa fa-comments"></span> Review </h3></button></a>
+        <br></br>
           <% for(var i = 0; i < reviews.length; i++){ %>
             <% if(reviews[i]["QUOTE"] && reviews[i]["CRITIC"]){ %>
               <p><strong><%= reviews[i]["PUBLICATION"] %> </strong> (<%= reviews[i]["PUBLISH_DATE"]%>): </p>

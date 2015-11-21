@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="stylesheets/bootstrap.css">
   <link rel="stylesheet" href="stylesheets/style.css">
   <style>
-    body    { padding-top: 50px; }
+    body    { padding-top:80px; }
   </style>
 </head>
 <body>
@@ -48,11 +48,11 @@
               <li class="dropdown">
                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Log in <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="/login"><span class="fa fa-user"></span> Local Login </a></li>
+                  <li><a href="/createProductCategory"><span class="fa fa-user"></span> Local Login </a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="/login"><span class="fa fa-user"></span> Local Signup</a></li>
+                  <li><a href="/viewProductCategory"><span class="fa fa-user"></span> Local Signup</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="/login"><span class="fa fa-facebook"></span> Fackbook Login</a></li>
+                  <li><a href="/viewProductCategory"><span class="fa fa-facebook"></span> Fackbook Login</a></li>
                 </ul>
               </li>
             </ul>
@@ -61,28 +61,13 @@
       </div><!-- /.container-fluid -->
     </nav>
 
-
+    <!--==================================================================================================================-->
 
     <!-- Reviews: every div shows one review tuple -->
     <% for(var i = 0;i < reviews.length; i++){ %>
       <% var reviewLink = "/review/" + reviews[i]["REVIEW_ID"]%>
       <% var movieLink = "/movies/" + reviews[i]["IMDB"]%>
-      <div class="container">
-      <div class="well">
-         <a href=<%= reviewLink %>><h1><span class="fa fa-comments"></span> Review for <i><strong><%= reviews[i]["TITLE"]%></strong></i></h1></a>
-         <div class="review">
-            <p>
-              <a href=<%= movieLink %>><img class="review_poster" src = <%= reviews[i]["POSTER"] %> /></a>
-            </p>
-            <p class="para">
-              <%= reviews[i]["QUOTE"]%>
-              <br>
-              <br>
-              ------<%= reviews[i]["CRITIC"]%>
-            </p>
-         </div>
-      </div>
-    </div>
+      
     <% } %>
 <script src="../../js/bootstrap.min.js"></script>
 <script src="../../js/jquery.js"></script>
