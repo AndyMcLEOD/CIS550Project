@@ -36,6 +36,7 @@ app.get('/', routes.getMovies);
 app.get('/artists', routes.getArtists);
 app.get('/artists/:id', routes.artistDetails);
 app.get('/reviews', routes.getReviews);
+app.get('/login', user.login);
 //app.get('/contact', routes.contact);
 //app.get('/result', routes.results);
 
