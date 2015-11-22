@@ -29,7 +29,7 @@
             <li><a href="/ "> Movies <span class="sr-only">(current)</span></a></li>
             <li><a href="/people"> People </a></li>
             <li><a href="/reviews"> Reviews </a></li>
-            <li class="active"><a href="/classification"> Classification </a></li>
+            <li class="active"><a href="/classification"> Categories </a></li>
             <li><a href="/trailers"> Trailers </a></li>
           </ul>
 
@@ -67,19 +67,46 @@
     <!-- Reviews: every div shows one review tuple。 -->
     <div class="container">
       <div class="well">
-        <BR><h2><i><strong><center>Genres<center></strong></i></h2></BR>
-        <TABLE>
-              <% for(var i=0; i<genres_list.length; i++) {
-
-                
-
-                if( (i + 1) % 5 == 0 ) {%> 
-
-
-                <%}
-                <h4> <%= genres_list[i]["GENRE"] %> </h4>
-            <% } %>
-        </TABLE>
+        <BR><h2><i><strong><center> Genres <center></strong></i></h2></BR>
+        <TABLE align = "center">
+          <% for(var row = 0, colNum = 10; row < genres_list.length/colNum; row++) {%>
+          <TR height = "30">
+            <% for(var col = 0; col < colNum && row*colNum + col < genres_list.length; col++) {%>
+            <TD width = "100">
+            <strong> <%= genres_list[row*colNum + col]["GENRE"] %>  </strong>
+            </TD>
+          <%} %>
+          </TR>
+        <%} %>
+      </TABLE>
+      </div>
+      <div class="well">
+        <BR><h2><i><strong><center> Years <center></strong></i></h2></BR>
+        <TABLE align = "center">
+          <% for(var row = 0; row < 3; row++) {%>
+          <TR height = "30">
+            <% for(var col = 0; col < 10; col++) {%>
+            <TD width = "100">
+            <strong> <%= years_list[col + row * 10] %></strong>
+            </TD>
+          <%} %>
+          </TR>
+        <%} %>
+      </TABLE>
+      </div>
+      <div class="well">
+        <BR><h2><i><strong><center> Tags <center></strong></i></h2></BR>
+        <TABLE align = "center">
+          <% for(var row = 0; row < 3; row++) {%>
+          <TR height = "30">
+            <% for(var col = 0; col < 10; col++) {%>
+            <TD width = "100">
+            <strong> <%= tags_list[col + row * 10] %></strong>
+            </TD>
+          <%} %>
+          </TR>
+        <%} %>
+      </TABLE>
       </div>
     </div>
 </body>

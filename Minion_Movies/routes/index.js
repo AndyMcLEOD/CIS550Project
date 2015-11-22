@@ -195,12 +195,22 @@ exports.results = function(req, res){
 
 exports.get_classes = function(req, res){
 
-		var query = connection.query('SELECT DISTINCT(GENRE) FROM MOVIE_GENRE', function(err, genres){
-		if(err){
-			console.error(err);
-			return;
-		}
-		res.render('classification.ejs', {genres_list: genres, isLogin:false});
+		var query1 = connection.query('SELECT DISTINCT(GENRE) FROM MOVIE_GENRE', function(err, genres){
+
+			if(err){ console.error(err); return; }
+
+			var query2 = connection.query('SELECT DISTINCT(TAG), COUNT(IMDB) FROM Movies_Tags GROUP BY TAG ORDER BY COUNT(IMDB) DESC LIMIT 30', function(err, tags_temp){
+												
+						if(err){ console.error(err); return; }
+
+						var years = new Array(30);
+						for(var i = 0, start = 1987; i <= 30; i++)   years[i] = start + i;
+
+						var tags = new Array(30);
+						for(var i = 0; i < 30; i++)   tags[i] = tags_temp[i]["TAG"]
+
+						res.render('classification.ejs', {genres_list: genres, years_list: years, tags_list: tags, isLogin: false});
+					});
 	});
 };
 
