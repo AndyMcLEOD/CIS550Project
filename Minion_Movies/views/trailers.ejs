@@ -8,7 +8,23 @@
   <link rel="stylesheet" href="stylesheets/bootstrap.css">
   <link rel="stylesheet" href="stylesheets/style.css">
   <style>
-    body    { padding-top:80px; }
+    body    { padding-top: 80px; }
+
+    .auto-play {
+        margin-left: -125px;
+    }
+
+    .review > div {
+        display: inline-block;
+    }
+
+    .para {
+        text-align: left;
+    }
+
+    a > button {
+        margin-left: 50px;
+    }
   </style>
 </head>
 <body>
@@ -70,26 +86,23 @@
           <p> 
             <% var movieLink = '/movies/' + trailers[i]["IMDB"] %>
             <a href=<%= movieLink %>>
-              <button class="btn btn-danger bt-xs"><strong><span class="fa fa-file-video-o"></span>&nbsp;&nbsp;&nbsp;<%= trailers[i]["TITLE"] %></strong></button>
+              <button class="btn btn-danger bt-xs"><strong><span class="fa fa-file-video-o"></span>&nbsp;&nbsp;&nbsp;"<%= trailers[i]["TITLE"] %>"</strong></button>
             </a>
           </p>
           <div class="review">
-              <p>
-                
-                <a href=<%= trailers[i]["TRAILER"] %>>
-                  <img src = <%= trailers[i]["POSTER"] %> alt = <%= trailers[i]["TITLE"] %> />
-                  <span class="fa fa-youtube-play fa-3x"></span>
-                </a> 
-              </p>
+            <div>                
+              <a href=<%= trailers[i]["TRAILER"] %>>
+                <img src = <%= trailers[i]["POSTER"] %> alt = <%= trailers[i]["TITLE"] %> />
+                <span class="fa fa-youtube-play fa-3x auto-play"></span>
+              </a> 
+            </div>
+            <div class="para">
               <p> <strong>Release date: </strong> <%= trailers[i]["RELEASE_DATE"] %> </p>
               <p> <strong>Runtime: </strong> <%= trailers[i]["RUNTIME"] %> </p>
               <p> <strong>TMDB rating: </strong> <%= trailers[i]["TMDB_RATING"] %>/10 </p>
               <p> <strong>Countries: </strong> <%= trailers[i]["COUNTRIES"] %> </p>
               <p> <strong>Genres: </strong> <%= trailers[i]["GENRES"] %> </p>
-              <p class="para">
-                <br>
-                <br>
-              </p>
+            </div>
           </div>
         </div>
       </div>
