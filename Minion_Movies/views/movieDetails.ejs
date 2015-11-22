@@ -105,8 +105,8 @@
           <img class="trailer_poster" src = <%= trailers[0]["POSTER"] %> />
           <% for(var i = 0; i < trailers.length; i++){ %>
             <% if(trailers[i]["TRAILER"] != "null"){ %>
-              <span class="fa fa-youtube-play"></span>
-              <a href=<%= trailers[i]["TRAILER"] %>> Play <%= i + 1 %> </a>
+              <span class="fa fa-youtube-play fa-2x"></span>
+              <a href=<%= trailers[i]["TRAILER"] %>> <strong> Play <%= i + 1 %> </strong>  </a>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <% }else{ %> none <% } %>
           <% } %>

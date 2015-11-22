@@ -25,9 +25,9 @@
           <ul class="nav navbar-nav">
             <li><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
             <li><a href="/artists"> Artists </a></li>
-            <li class="active"><a href="/reviews"> Reviews </a></li>
+            <li><a href="/reviews"> Reviews </a></li>
             <li><a href="/classification"> Classification </a></li>
-            <li><a href="/trailers"> Trailers </a></li>
+            <li class="active"><a href="/trailers"> Trailers </a></li>
           </ul>
           <form method="post" class="navbar-form navbar-left" role="search">
             <div class="form-group">
@@ -64,10 +64,35 @@
     <!--==================================================================================================================-->
 
     <!-- Reviews: every div shows one review tuple -->
-    <% for(var i = 0;i < reviews.length; i++){ %>
-      <% var reviewLink = "/review/" + reviews[i]["REVIEW_ID"]%>
-      <% var movieLink = "/movies/" + reviews[i]["IMDB"]%>
-      
+    <% for(var i = 0; i < trailers.length; i++){ %>
+      <div class="container">
+        <div class="well">
+          <p> 
+            <% var movieLink = '/movies/' + trailers[i]["IMDB"] %>
+            <a href=<%= movieLink %>>
+              <button class="btn btn-danger bt-xs"><strong><span class="fa fa-file-video-o"></span>&nbsp;&nbsp;&nbsp;<%= trailers[i]["TITLE"] %></strong></button>
+            </a>
+          </p>
+          <div class="review">
+              <p>
+                
+                <a href=<%= trailers[i]["TRAILER"] %>>
+                  <img src = <%= trailers[i]["POSTER"] %> alt = <%= trailers[i]["TITLE"] %> />
+                  <span class="fa fa-youtube-play fa-3x"></span>
+                </a> 
+              </p>
+              <p> <strong>Release date: </strong> <%= trailers[i]["RELEASE_DATE"] %> </p>
+              <p> <strong>Runtime: </strong> <%= trailers[i]["RUNTIME"] %> </p>
+              <p> <strong>TMDB rating: </strong> <%= trailers[i]["TMDB_RATING"] %>/10 </p>
+              <p> <strong>Countries: </strong> <%= trailers[i]["COUNTRIES"] %> </p>
+              <p> <strong>Genres: </strong> <%= trailers[i]["GENRES"] %> </p>
+              <p class="para">
+                <br>
+                <br>
+              </p>
+          </div>
+        </div>
+      </div>
     <% } %>
 <script src="../../js/bootstrap.min.js"></script>
 <script src="../../js/jquery.js"></script>
