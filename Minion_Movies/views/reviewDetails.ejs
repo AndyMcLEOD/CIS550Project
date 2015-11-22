@@ -9,6 +9,20 @@
   <link rel="stylesheet" href="../../stylesheets/style.css">
   <style>
     body    { padding-top: 50px; }
+
+    .para {
+            font-size: 110%;
+            text-align: left;
+    }
+
+    .review > p {
+        display: inline-block;
+        margin-left: 0px;
+    }
+
+    button {
+        margin-right: 100px;
+    }
   </style>
 </head>
 <body>
@@ -83,22 +97,31 @@
       </div>
 
       <div class="well">
-        <p>
-          <% movieLink = '/movies/' + review["IMDB"] %>
-          <a href=<%= movieLink %>><button class="btn btn-danger bt-xs"><h3><span class="fa fa-file-video-o"></span> <%= review["TITLE_YEAR"] %>: </h3></button></a>
-
-          <strong>Release date: </strong><%= review["RELEASE_DATE"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <strong>MPAA: </strong><%= review["MPAA"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <strong>Runtime: </strong><%= review["RUNTIME"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <strong>Rotten tomatoes' rating: </strong><%= review["RT_AUDIENCE_RATING"] %>/100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <br></br>
-          <strong>Overview: </strong><%= (review["OVERVIEW"]).substring(0, 180);%>......
-        </p>
+        <div class="review">
+          <p>
+            <% movieLink = '/movies/' + review["IMDB"] %>
+            <a href=<%= movieLink %>><button class="btn btn-danger bt-xs"><h3><span class="fa fa-file-video-o"></span> <%= review["TITLE_YEAR"] %>: </h3></button></a>
+          </p>
+          <p class="para">
+            <strong>Release date: </strong><%= review["RELEASE_DATE"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <br>
+            <strong>MPAA: </strong><%= review["MPAA"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <br>
+            <strong>Runtime: </strong><%= review["RUNTIME"] %>&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <br>
+            <strong>Rotten tomatoes' rating: </strong><%= review["RT_AUDIENCE_RATING"] %>/100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <br>
+          </p>
+        </div>
+          <br>
+          <strong>Overview: </strong><%= (review["OVERVIEW"]).substring(0, 180);%>
       </div>
 
       <div class="well">
         <button class="btn btn-primary bt-xs"><h3><i class="fa fa-file-text"></i> Other reviews for <%= review["TITLE_YEAR"] %> :</h3></button>
-        <br></br>
+        <br>
+        <br>
+        <br>
         <% for(var i = 0; i < otherReviews.length; i++){ %>
           <% if(otherReviews[i]["QUOTE"]){ %>
             <p><strong><i><%= otherReviews[i]["PUBLICATION"] %></i> : </strong><%= otherReviews[i]["QUOTE"] %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------<%= otherReviews[i]["CRITIC"] %></p>
