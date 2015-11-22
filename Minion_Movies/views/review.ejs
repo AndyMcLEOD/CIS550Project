@@ -4,14 +4,11 @@
 <head>
   <title>Minion Movies</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!-- load fontawesome -->
   <link rel="stylesheet" href="stylesheets/bootstrap.css">
   <link rel="stylesheet" href="stylesheets/style.css">
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/jquery.js"></script>
-  <script src="js/bootstrap.js"></script>
   <style>
-    body    { padding-top:80px; }
+    body    { padding-top: 50px; }
   </style>
 </head>
 <body>
@@ -27,7 +24,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
-            <li><a href="/people"> People </a></li>
+            <li><a href="/artists"> Artists </a></li>
             <li class="active"><a href="/reviews"> Reviews </a></li>
             <li><a href="/classification"> Classification </a></li>
             <li><a href="/trailers"> Trailers </a></li>
@@ -51,11 +48,11 @@
               <li class="dropdown">
                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Log in <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="/createProductCategory"><span class="fa fa-user"></span> Local Login </a></li>
+                  <li><a href="/login"><span class="fa fa-user"></span> Local Login </a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="/viewProductCategory"><span class="fa fa-user"></span> Local Signup</a></li>
+                  <li><a href="/login"><span class="fa fa-user"></span> Local Signup</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="/viewProductCategory"><span class="fa fa-facebook"></span> Fackbook Login</a></li>
+                  <li><a href="/login"><span class="fa fa-facebook"></span> Fackbook Login</a></li>
                 </ul>
               </li>
             </ul>
@@ -65,12 +62,30 @@
     </nav>
 
 
-    <!-- Reviews: 每个divider 显示一个review tuple。 -->
-    <div class="col-sm-6">
+
+    <!-- Reviews: every div shows one review tuple -->
+    <% for(var i = 0;i < reviews.length; i++){ %>
+      <% var reviewLink = "/review/" + reviews[i]["REVIEW_ID"]%>
+      <% var movieLink = "/movies/" + reviews[i]["IMDB"]%>
+      <div class="container">
       <div class="well">
-         <h1><span class="fa fa-comments"></span> Review for</h1>
-        <a href="/auth/msg" class = "btn btn-default"> GO </a>
+         <a href=<%= reviewLink %>><h1><span class="fa fa-comments"></span> Review for <i><strong><%= reviews[i]["TITLE"]%></strong></i></h1></a>
+         <div class="review">
+            <p>
+              <a href=<%= movieLink %>><img class="review_poster" src = <%= reviews[i]["POSTER"] %> /></a>
+            </p>
+            <p class="para">
+              <%= reviews[i]["QUOTE"]%>
+              <br>
+              <br>
+              ------<%= reviews[i]["CRITIC"]%>
+            </p>
+         </div>
       </div>
     </div>
+    <% } %>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/jquery.js"></script>
+<script src="../../js/bootstrap.js"></script> 
 </body>
 </html>
