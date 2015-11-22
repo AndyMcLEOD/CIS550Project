@@ -214,3 +214,12 @@ exports.get_classes = function(req, res){
 	});
 };
 
+
+exports.getTrailers = function(req, res){
+	var query1 = "select * from movies_trailers where TRAILER<>'null' and POSTER<>'null' limit 20";
+	connection.query(query1, function(err, trailers){
+		if(err) throw err;
+		res.render('trailers.ejs', { isLogin: false,
+								 trailers: trailers});
+	});
+}
