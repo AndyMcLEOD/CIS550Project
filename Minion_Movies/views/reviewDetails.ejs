@@ -1,0 +1,117 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<html>
+<head>
+  <title>Minion Movies</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!-- load fontawesome -->
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/style.css">
+  <style>
+    body    { padding-top: 50px; }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Minion Movies</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/ "> Movies <span class="sr-only">(current)</span></a></li>
+            <li><a href="/artists"> Artists </a></li>
+            <li class="active"><a href="/reviews"> Reviews </a></li>
+            <li><a href="/classification"> Classification </a></li>
+            <li><a href="/trailers"> Trailers </a></li>
+          </ul>
+
+          <form method="post" class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search movies or people here">
+            </div>
+            <select name="search" size="1">
+                    <option value="title" selected> title </option>
+                    <option value="actors"> actors </option>
+                    <option value="reviews"> reviews </option>
+                    <option value="tags"> tags </option>
+                    <option value="year"> year </option>
+                    <option value="genres"> genres </option>
+            </select>
+            <button type="submit" class="btn btn-default">Search</button>
+          </form>
+          <% if(!isLogin){ %>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Log in <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/createProductCategory"><span class="fa fa-user"></span> Local Login </a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/viewProductCategory"><span class="fa fa-user"></span> Local Signup</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/viewProductCategory"><span class="fa fa-facebook"></span> Fackbook Login</a></li>
+                </ul>
+              </li>
+            </ul>
+          <% }else{ } %>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <!-- Reviews: every div shows one review tuple。 -->
+    <div class="container">
+      <div class="well">
+        <h1><i class="fa fa-file-text"></i> <i><%= review["PUBLICATION"] %></i>'s review for <%= review["TITLE_YEAR"] %></h1>
+        <span class="image">
+         <div class="review">
+            <p>
+              <% var movieLink = '/movies/' + review["IMDB"]%>
+              <a href=<%= movieLink %>><img class="review_poster" src = <%= review["POSTER"] %> /></a>
+            </p>
+            <p class="para">
+              <%= review["QUOTE"]%>
+              <br>
+              <br>
+              ------<%= review["CRITIC"]%>(<%= review["PUBLISH_DATE"]%>)
+            </p>
+        </span>
+      </div>
+
+      <div class="well">
+        <p>
+          <% movieLink = '/movies/' + review["IMDB"] %>
+          <a href=<%= movieLink %>><button class="btn btn-danger bt-xs"><h3><span class="fa fa-file-video-o"></span> <%= review["TITLE_YEAR"] %>: </h3></button></a>
+
+          <strong>Release date: </strong><%= review["RELEASE_DATE"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <strong>MPAA: </strong><%= review["MPAA"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <strong>Runtime: </strong><%= review["RUNTIME"] %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <strong>Rotten tomatoes' rating: </strong><%= review["RT_AUDIENCE_RATING"] %>/100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <br></br>
+          <strong>Overview: </strong><%= (review["OVERVIEW"]).substring(0, 180);%>......
+        </p>
+      </div>
+
+      <div class="well">
+        <button class="btn btn-primary bt-xs"><h3><i class="fa fa-file-text"></i> Other reviews for <%= review["TITLE_YEAR"] %> :</h3></button>
+        <br></br>
+        <% for(var i = 0; i < otherReviews.length; i++){ %>
+          <% if(otherReviews[i]["QUOTE"]){ %>
+            <p><strong><i><%= otherReviews[i]["PUBLICATION"] %></i> : </strong><%= otherReviews[i]["QUOTE"] %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------<%= otherReviews[i]["CRITIC"] %></p>
+          <% } %>
+        <% } %>
+      </div>
+
+      
+
+      
+    </div>
+<script src="../../js/bootstrap.min.js"></script>
+<script src="../../js/jquery.js"></script>
+<script src="../../js/bootstrap.js"></script>     
+</body>
+</html>
