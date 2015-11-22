@@ -8,7 +8,23 @@
   <link rel="stylesheet" href="stylesheets/bootstrap.css">
   <link rel="stylesheet" href="stylesheets/style.css">
   <style>
-    body    { padding-top:80px; }
+    body    { padding-top: 80px; }
+
+    .auto-play {
+        margin-left: -125px;
+    }
+
+    .review > div {
+        display: inline-block;
+    }
+
+    .para {
+        text-align: left;
+    }
+
+    a > button {
+        margin-left: 50px;
+    }
   </style>
 </head>
 <body>
@@ -25,15 +41,14 @@
           <ul class="nav navbar-nav">
             <li><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
             <li><a href="/artists"> Artists </a></li>
-            <li class="active"><a href="/reviews"> Reviews </a></li>
+            <li><a href="/reviews"> Reviews </a></li>
             <li><a href="/classification"> Classification </a></li>
-            <li><a href="/trailers"> Trailers </a></li>
+            <li class="active"><a href="/trailers"> Trailers </a></li>
           </ul>
           <form method="post" class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search movies or people here">
+              <input type="text" class="form-control" size="31" placeholder="Search movies or people here">
             </div>
-            <button type="submit" class="btn btn-default">Search</button>
             <select name="search" size="1">
                     <option value="title" selected> title </option>
                     <option value="actors"> actors </option>
@@ -42,6 +57,7 @@
                     <option value="year"> year </option>
                     <option value="genres"> genres </option>
             </select>
+            <button type="submit" class="btn btn-default">Search</button>
           </form>
           <% if(!isLogin){ %>
             <ul class="nav navbar-nav navbar-right">
@@ -64,10 +80,32 @@
     <!--==================================================================================================================-->
 
     <!-- Reviews: every div shows one review tuple -->
-    <% for(var i = 0;i < reviews.length; i++){ %>
-      <% var reviewLink = "/review/" + reviews[i]["REVIEW_ID"]%>
-      <% var movieLink = "/movies/" + reviews[i]["IMDB"]%>
-      
+    <% for(var i = 0; i < trailers.length; i++){ %>
+      <div class="container">
+        <div class="well">
+          <p> 
+            <% var movieLink = '/movies/' + trailers[i]["IMDB"] %>
+            <a href=<%= movieLink %>>
+              <button class="btn btn-danger bt-xs"><strong><span class="fa fa-file-video-o"></span>&nbsp;&nbsp;&nbsp;"<%= trailers[i]["TITLE"] %>"</strong></button>
+            </a>
+          </p>
+          <div class="review">
+            <div>                
+              <a href=<%= trailers[i]["TRAILER"] %>>
+                <img src = <%= trailers[i]["POSTER"] %> alt = <%= trailers[i]["TITLE"] %> />
+                <span class="fa fa-youtube-play fa-3x auto-play"></span>
+              </a> 
+            </div>
+            <div class="para">
+              <p> <strong>Release date: </strong> <%= trailers[i]["RELEASE_DATE"] %> </p>
+              <p> <strong>Runtime: </strong> <%= trailers[i]["RUNTIME"] %> </p>
+              <p> <strong>TMDB rating: </strong> <%= trailers[i]["TMDB_RATING"] %>/10 </p>
+              <p> <strong>Countries: </strong> <%= trailers[i]["COUNTRIES"] %> </p>
+              <p> <strong>Genres: </strong> <%= trailers[i]["GENRES"] %> </p>
+            </div>
+          </div>
+        </div>
+      </div>
     <% } %>
 <script src="../../js/bootstrap.min.js"></script>
 <script src="../../js/jquery.js"></script>

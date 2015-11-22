@@ -32,9 +32,8 @@
 
           <form method="post" class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search movies or people here">
+              <input type="text" class="form-control" size="31" placeholder="Search movies or people here">
             </div>
-            <button type="submit" class="btn btn-default">Search</button>
             <select name="search" size="1">
                     <option value="title" selected> title </option>
                     <option value="actors"> actors </option>
@@ -43,6 +42,7 @@
                     <option value="year"> year </option>
                     <option value="genres"> genres </option>
             </select>
+            <button type="submit" class="btn btn-default">Search</button>
           </form>
           <% if(!isLogin){ %>
             <ul class="nav navbar-nav navbar-right">
