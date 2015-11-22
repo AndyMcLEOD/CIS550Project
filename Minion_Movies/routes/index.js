@@ -192,3 +192,15 @@ exports.results = function(req, res){
 	
 	});
 };
+
+exports.get_classes = function(req, res){
+
+		var query = connection.query('SELECT DISTINCT(GENRE) FROM MOVIE_GENRE', function(err, genres){
+		if(err){
+			console.error(err);
+			return;
+		}
+		res.render('classification.ejs', {genres_list: genres, isLogin:false});
+	});
+};
+
