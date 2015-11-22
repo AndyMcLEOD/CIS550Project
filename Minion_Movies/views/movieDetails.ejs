@@ -13,6 +13,10 @@
     .well {
         padding-bottom: 50px;
     }
+
+    .play {
+        margin-left: 50px;
+    }
   </style>
 </head>
 <body>
@@ -101,17 +105,16 @@
 
       <div class="well">
         <button class="btn btn-danger bt-xs"><h3><span class="fa fa-youtube-play"></span> Trailer </h3></button>
-        <p>
+        <p class="play">
           <img class="trailer_poster" src = <%= trailers[0]["POSTER"] %> />
           <% for(var i = 0; i < trailers.length; i++){ %>
             <% if(trailers[i]["TRAILER"] != "null"){ %>
-              <span class="fa fa-youtube-play"></span>
+              <span class="fa fa-youtube-play fa-2x play"></span>
               <a href=<%= trailers[i]["TRAILER"] %>> Play <%= i + 1 %> </a>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <% }else{ %> none <% } %>
           <% } %>
-        </p>
-        
+        </p>        
       </div>
 
       <div class="well">
