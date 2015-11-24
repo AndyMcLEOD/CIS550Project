@@ -12,6 +12,16 @@
   <script src="../../js/bootstrap.js"></script>
   <style>
     body    { padding-top: 50px; }
+
+    TABLE {
+        margin: 50px;
+        margin-left: 50px;
+        text-align: center;
+    }
+
+    .well {
+        margin-bottom: 50px;
+    }
   </style>
 </head>
 <body>
@@ -70,10 +80,10 @@
         <BR><h2><i><strong><center> Genres <center></strong></i></h2></BR>
         <TABLE align = "center">
           <% for(var row = 0, colNum = 10; row < genres_list.length/colNum; row++) {%>
-          <TR height = "30">
+          <TR height="30">
             <% for(var col = 0; col < colNum && row*colNum + col < genres_list.length; col++) {%>
-            <TD width = "100">
-            <strong> <%= genres_list[row*colNum + col]["GENRE"] %>  </strong>
+            <TD width="100">
+            <a> <%= genres_list[row*colNum + col]["GENRE"] %>  </a>
             </TD>
           <%} %>
           </TR>
@@ -87,7 +97,7 @@
           <TR height = "30">
             <% for(var col = 0; col < 10; col++) {%>
             <TD width = "100">
-            <strong> <%= years_list[col + row * 10] %></strong>
+            <a> <%= years_list[col + row * 10] %></a>
             </TD>
           <%} %>
           </TR>
@@ -98,10 +108,10 @@
         <BR><h2><i><strong><center> Tags <center></strong></i></h2></BR>
         <TABLE align = "center">
           <% for(var row = 0; row < 3; row++) {%>
-          <TR height = "30">
+          <TR height = "50">
             <% for(var col = 0; col < 10; col++) {%>
             <TD width = "100">
-            <strong> <%= tags_list[col + row * 10] %></strong>
+            <a> <%= tags_list[col + row * 10] %></a>
             </TD>
           <%} %>
           </TR>
