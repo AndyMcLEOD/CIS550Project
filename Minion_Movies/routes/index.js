@@ -209,7 +209,7 @@ exports.get_classes = function(req, res){
 						var tags = new Array(30);
 						for(var i = 0; i < 30; i++)   tags[i] = tags_temp[i]["TAG"]
 
-						res.render('classification.ejs', {genres_list: genres, years_list: years, tags_list: tags, isLogin: false});
+						res.render('categories.ejs', {genres_list: genres, years_list: years, tags_list: tags, isLogin: false});
 					});
 	});
 };
