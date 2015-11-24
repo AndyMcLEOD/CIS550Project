@@ -83,7 +83,7 @@
           <TR height="30">
             <% for(var col = 0; col < colNum && row*colNum + col < genres_list.length; col++) {%>
             <TD width="100">
-            <a> <%= genres_list[row*colNum + col]["GENRE"] %>  </a>
+            <a href="/result" name="keyword" value=<%= genres_list[row*colNum + col]["GENRE"] %> > <%= genres_list[row*colNum + col]["GENRE"] %>  </a>
             </TD>
           <%} %>
           </TR>
@@ -97,7 +97,7 @@
           <TR height = "30">
             <% for(var col = 0; col < 10; col++) {%>
             <TD width = "100">
-            <a> <%= years_list[col + row * 10] %></a>
+            <a href="/result" name="keyword" value=<%= years_list[col + row * 10] %>> <%= years_list[col + row * 10] %></a>
             </TD>
           <%} %>
           </TR>
@@ -111,7 +111,7 @@
           <TR height = "50">
             <% for(var col = 0; col < 10; col++) {%>
             <TD width = "100">
-            <a> <%= tags_list[col + row * 10] %></a>
+            <a href="/result" name="keyword" value=<%= tags_list[col + row * 10] %>> <%= tags_list[col + row * 10] %></a>
             </TD>
           <%} %>
           </TR>
