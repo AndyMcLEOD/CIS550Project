@@ -45,21 +45,27 @@ exports.movieDetails = function(req, res){
 	connection.query(query1, function(err, movies){		      		//query MOVIES
 		if(err) throw err;
 		console.log(query1);
+		console.log(movies);
 		connection.query(query2, function(err, genres){            //GENRES
 			if(err) throw err;
 			console.log(query2);
+			console.log(genres);
 			if(genres.length > 0){
 				var genre = genres[0]["GENRE"];
 				for(var i = 1; i < genres.length; i++){ genre = genre + " | " + genres[i]["GENRE"]; }}
 			else{ var genre = "none"; }
 			connection.query(query3, function(err, tags){  		//TAG
 				if(err) throw err;
+				console.log(query3);
+				console.log(tags);
 				if(tags.length > 0){
 					var tag = tags[0]["TAG"];
 					for(var i = 1; i < tags.length; i++){ tag = tag + " | " + tags[i]["TAG"]; }}
 				else{var tag = "none";}
 				connection.query(query4, function(err, directors){    //DIRECTOR
 					if(err) throw err;
+					console.log(query4);
+					console.log(directors);
 					if(directors.length > 0){
 						var director = directors[0]["NAME"];
 						for(var i = 1; i < directors.length; i++){ director = director + " | " + director[i]["NAME"]; }}
@@ -68,11 +74,13 @@ exports.movieDetails = function(req, res){
 						console.log(temp.sql);
 						if(err) throw err;
 						console.log("=========actors===========");
+						console.log(query5);
 						console.log(actors);
 						connection.query(query6, function(err, trailers){
 							if(err) throw err;
-							console.log("=========actors===========");
-							console.log(actors);
+							console.log("trailers");
+							console.log(trailers);
+							console.log(trailers.length);
 							connection.query(query7, function(err, reviews){
 								if(err) throw err;
 								connection.query(query8, function(err, recommendations){
@@ -108,6 +116,7 @@ exports.getArtists = function(req, res){
 
 exports.artistDetails = function(req, res){
 	var aid = req.params.id; 
+	console.log(aid);
 	var query1 = "select * from PERSON_INFO where ID = " + aid;
 	var query2 = "select * from PERSON_ALIASE where PERSON_ID = " + aid;
 	var query3 = "select m.MOVIE_ID, ma.CHARACTER, ma.TITLE, m.POSTER "
@@ -165,6 +174,15 @@ exports.reviewDetails = function(req, res){
 	});
 }
 
+exports.getTrailers = function(req, res){
+	var query1 = "select * from movies_trailers where TRAILER<>'null' and POSTER<>'null' limit 20";
+	connection.query(query1, function(err, trailers){
+		if(err) throw err;
+		res.render('trailers', { isLogin: false,
+								 trailers: trailers});
+	});
+}
+
 exports.about = function(req, res){
 
 	res.render('about.ejs', { title: "about", message: "this is about page...", date: new Date()  });
@@ -178,20 +196,133 @@ exports.contact = function(req, res){
 };
 
 exports.results = function(req, res){
-	
-		var query = connection.query('select * from REVIEWS', function(err, result){
-			
-		console.log(query.sql);
-		
-		if(err){
-			console.error(err);
-			return;
-		}
-		
-		res.render('result.ejs', { results: result});
-	
-	});
+	var content = req.body.searchContent;
+	var type = req.body.searchType;
+	console.log(type);
+	console.log(content);
+	var query;
+	if(type == "title"){
+		query = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+					+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
+					+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
+					+ " where mt.TITLE like '%" + content + "%'"
+					+ " limit 200";
+		connection.query(query, function(err, movies){
+			if(err) throw err;
+			res.render('movieResult', { isLogin: false,
+										movies: movies });
+		});
+	}
+	if(type == "genres"){
+		query = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+					+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
+					+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
+					+ " where mt.GENRES like '%" + content + "%'"
+					+ " limit 200";
+		connection.query(query, function(err, movies){
+			if(err) throw err;
+			res.render('movieResult', { isLogin: false,
+										movies: movies });
+		});
+	}
+	if(type == "year"){
+		query = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+					+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
+					+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
+					+ " where m.TITLE_YEAR like '%" + content + "%'"
+					+ " limit 200"; 
+		connection.query(query, function(err, movies){
+			if(err) throw err;
+			res.render('movieResult', { isLogin: false,
+										movies: movies });
+		});
+	}
+	if(type == "country"){
+		query = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+					+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
+					+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
+					+ " where mt.COUNTRIES like '%" + content + "%'"
+					+ " limit 200"; 
+		connection.query(query, function(err, movies){
+			if(err) throw err;
+			res.render('movieResult', { isLogin: false,
+										movies: movies });
+		});
+	}
+	if(type == "tag"){
+		query = "select DISTINCT m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+				+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW "
+				+ " from Movies_Tags mta inner join MOVIES m on mta.IMDB = m.MOVIE_ID "
+				+ " inner join movies_trailers mt on mt.IMDB = m.MOVIE_ID "
+				+ "	where mta.TAG LIKE '%" + content + "%'"
+				+ " LIMIT 8";
+		connection.query(query, function(err, movies){
+  			if(err) throw err;
+			res.render('movieResult', { isLogin: false,
+										movies: movies });
+  		});
+	}
+
+	if(type == "actors"){
+		query = "select * "
+					+ " from PERSON_INFO "
+  					+ " WHERE NAME like '%" + content + "%'";
+  		connection.query(query, function(err, actors){
+  			if(err) throw err;
+  			res.render('actorResult', { isLogin: false,
+  										actors: actors });
+  		});
+	}
 };
+
+
+
+exports.getGenres = function(req, res){
+	var genre = req.params.value;
+	console.log(genre);
+	var query1 = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+				+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
+				+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
+				+ " where mt.GENRES like '%" + genre + "%'"
+				+ " limit 200";
+	connection.query(query1, function(err, movies){
+		if(err) throw err;
+		res.render('movieResult', { isLogin: false,
+									movies: movies });
+	});				
+};
+
+exports.getYears = function(req, res){
+	var year = req.params.value;
+	console.log(year);
+	var query1 = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+					+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
+					+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
+					+ " where m.TITLE_YEAR like '%" + year + "%'"
+					+ " limit 200"; 
+	connection.query(query1, function(err, movies){
+		if(err) throw err;
+		res.render('movieResult', { isLogin: false,
+									movies: movies });
+	});	
+};
+
+exports.getTag = function(req, res){
+	var tag = req.params.value;
+	console.log(tag);
+	var query1 = "select DISTINCT m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
+				+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW "
+				+ " from Movies_Tags mta inner join MOVIES m on mta.IMDB = m.MOVIE_ID "
+				+ " inner join movies_trailers mt on mt.IMDB = m.MOVIE_ID "
+				+ "	where mta.TAG LIKE '%" + tag + "%'"
+				+ " LIMIT 8";
+	connection.query(query1, function(err, movies){
+		if(err) throw err;
+		res.render('movieResult', { isLogin: false,
+									movies: movies });
+	});	
+};
+
 
 exports.get_classes = function(req, res){
 
@@ -214,12 +345,3 @@ exports.get_classes = function(req, res){
 	});
 };
 
-
-exports.getTrailers = function(req, res){
-	var query1 = "select * from movies_trailers where TRAILER<>'null' and POSTER<>'null' limit 20";
-	connection.query(query1, function(err, trailers){
-		if(err) throw err;
-		res.render('trailers.ejs', { isLogin: false,
-								 trailers: trailers});
-	});
-}

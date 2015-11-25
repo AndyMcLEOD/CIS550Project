@@ -38,8 +38,14 @@ app.get('/artists/:id', routes.artistDetails);
 app.get('/review/:id', routes.reviewDetails);
 app.get('/reviews', routes.getReviews);
 app.get('/login', user.login);
-app.get('/categories', routes.get_classes);
 app.get('/trailers', routes.getTrailers);
+app.get('/categories', routes.get_classes);
+
+app.post('/result', routes.results);
+app.get('/category/genres/:value', routes.getGenres);
+app.get('/category/years/:value', routes.getYears);
+app.get('/category/tag/:value', routes.getTag);
+
 //app.get('/contact', routes.contact);
 //app.get('/result', routes.results);
 

@@ -38,15 +38,15 @@
             <li><a href="/trailers"> Trailers </a></li>
           </ul>
 
-          <form method="post" class="navbar-form navbar-left" role="search">
+          <form action='/result' method="post" class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" size="31" placeholder="Search movies or people here">
+              <input type="text" class="form-control" size="31" placeholder="Search movies or people here" name="searchContent">
             </div>
-            <select name="search" size="1">
+            <select name="searchType" size="1">
                     <option value="title" selected> title </option>
                     <option value="actors"> actors </option>
-                    <option value="reviews"> reviews </option>
-                    <option value="tags"> tags </option>
+                    <option value="country"> country </option>
+                    <option value="tag"> tag </option>
                     <option value="year"> year </option>
                     <option value="genres"> genres </option>
             </select>
@@ -80,7 +80,7 @@
             <p><strong>Cast:</strong>
               <% if(actors.length > 0){ %>
                 <% for(var i = 0;i < actors.length;i++){ %>
-                    <% var artistLink = "/artists/" + actors[i]["PERSON_ID"]%>
+                    <% var artistLink = "/artists/" + actors[i]["PERSON_ID"] %>
                     &nbsp;<a href=<%= artistLink %>> <%= actors[i]["NAME"] %>(<%= actors[i]["CHARACTER"] %>) </a>&nbsp;| 
                 <% } %>
               <% }else{ %>
@@ -108,15 +108,17 @@
           <button class="btn btn-danger bt-xs"><h3><span class="fa fa-youtube-play"></span> Trailer </h3></button>
         </a>
         <p class="play">
-          <img class="trailer_poster" src = <%= trailers[0]["POSTER"] %> />
-          <% for(var i = 0; i < trailers.length; i++){ %>
-            <% if(trailers[i]["TRAILER"] != "null"){ %>
-              <span class="fa fa-youtube-play fa-2x play"></span>
-              <a href=<%= trailers[i]["TRAILER"] %>> Play <%= i + 1 %> </a>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <% }else{ %> none <% } %>
-          <% } %>
-        </p>        
+           <% if(!(trailers[0]["POSTER"] == 'null')){ %>
+             <img class="trailer_poster" src = <%= trailers[0]["POSTER"] %> />
+           <% } %>
+           <% for(var i = 0; i < trailers.length; i++){ %>
+             <% if(trailers[i]["TRAILER"] != "null"){ %>
+               <span class="fa fa-youtube-play fa-2x play"></span>
+               <a href=<%= trailers[i]["TRAILER"] %>> Play <%= i + 1 %> </a>
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             <% }else{ %> <strong>No trailer for this movie... </strong> <% } %>
+           <% } %>
+        </p>      
       </div>
 
       <div class="well">
@@ -128,9 +130,9 @@
             <a href = <%= link %>>
               <img src = <%= rec1[i]["POSTER"] %> alt = <%= rec1[i]["TITLE_YEAR"] %> />
             </a>
-          <a href = <%= link %> class="link"><%= rec1[i]["TITLE_YEAR"] %></a>
+            <a href = <%= link %> class="link"><%= rec1[i]["TITLE_YEAR"] %></a>
           </span>
-    <% } %> 
+        <% } %> 
       </div>
 
       <div class="well">
@@ -146,7 +148,7 @@
                   <a href=<%= reviews[i]["LINK"] %>><strong>(View complete review)</strong></a> 
                 <% } %>
                 <% if(reviews[i]["CRITIC"]){ %>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------<%= reviews[i]["CRITIC"] %>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;------<%= reviews[i]["CRITIC"] %>
                 <% } %>
               </p>
             <% } %>

@@ -8,10 +8,20 @@
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/style.css">
   <style>
-    body    { padding-top: 50px; }
+    body    { padding-top: 80px; }
 
-    .well {
-        padding-bottom: 50px;
+    .review > div {
+        display: inline-block;
+    }
+
+    .para {
+        text-align: left;
+        margin-left: 120px;
+    }
+
+    a > button {
+        margin-left: 20px;
+        margin-top: 20px;
     }
   </style>
 </head>
@@ -27,13 +37,12 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li><a href="/ "> Movies <span class="sr-only">(current)</span></a></li>
-            <li class="active"><a href="/artists"> Artists </a></li>
+            <li class="active"><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
+            <li><a href="/artists"> Artists </a></li>
             <li><a href="/reviews"> Reviews </a></li>
             <li><a href="/categories"> Categories </a></li>
             <li><a href="/trailers"> Trailers </a></li>
           </ul>
-
           <form action='/result' method="post" class="navbar-form navbar-left" role="search">
             <div class="form-group">
               <input type="text" class="form-control" size="31" placeholder="Search movies or people here" name="searchContent">
@@ -48,18 +57,16 @@
             </select>
             <button type="submit" class="btn btn-default">Search</button>
           </form>
-
-          
           <% if(!isLogin){ %>
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Log in <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="/login"><span class="fa fa-user"></span> Local Login </a></li>
+                  <li><a href="/createProductCategory"><span class="fa fa-user"></span> Local Login </a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="/login"><span class="fa fa-user"></span> Local Signup</a></li>
+                  <li><a href="/viewProductCategory"><span class="fa fa-user"></span> Local Signup</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="/login"><span class="fa fa-facebook"></span> Fackbook Login</a></li>
+                  <li><a href="/viewProductCategory"><span class="fa fa-facebook"></span> Fackbook Login</a></li>
                 </ul>
               </li>
             </ul>
@@ -67,51 +74,43 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-    <!-- Reviews: every div shows one review tuple。 -->
-    <div class="container">
-      <div class="well">
-        <h1><i class="fa fa-circle"></i> <%= artist["NAME"] %></h1>
-        <span class="image">
-          <% if(artist["PROFILE"]){ %>
-            <img class="poster" src = <%= artist["PROFILE"] %> alt = <%= artist["NAME"] %>/>
-          <% } %>
-            <p> <strong>Date of Birth: </strong> <%= artist["DAY_OF_BIRTH"] %> </p>
-            <p> <strong>Date of Death: </strong> <%= artist["DAY_OF_DEATH"] %> </p>
-            <p> <strong>A.K.A: </strong> <%= aliases %> </p>
-            <p> <strong>Biogaphy: </strong> <%= artist["BIOGRAPHY"] %> </p>
-          <% var tmdbLink = "https://www.themoviedb.org/person/" + artist["ID"] %>
-          <p><a href=<%= tmdbLink %>> <strong> More details... </strong> </a></p> 
-        </span>
-      </div>
 
-      <div class="well">
-        <button class="btn btn-danger bt-xs"><h3><span class="fa fa-file-video-o"></span> Acting: </h3></button>
-        <p>
-          <% for(var i = 0; i < actings.length; i++){ %>
-            <% var id = actings[i]["MOVIE_ID"]%>
-            <% var link = "/movies/" + actings[i]["MOVIE_ID"] %>
-            <span class="image">
-              <a href = <%= link %>>
-                <img src = <%= actings[i]["POSTER"] %> alt = <%= actings[i]["TITLE"] %> /></a>
-              <a href = <%= link %> class="link"><%= actings[i]["TITLE"] %>(as&nbsp;<%= actings[i]["CHARACTER"] %>)</a>
-            </span>
-          <% } %> 
-        </p>
-        
-      </div>
-      <div class="well">
-        <button class="btn btn-danger bt-xs"><h3><span class="fa fa-file-video-o"></span> Direting: </h3></button>
+    <!--==================================================================================================================-->
 
-        
-      </div>
+    <!-- Reviews: every div shows one review tuple -->
+    <% for(var i = 0; i < movies.length; i++){ %>
+      <div class="container">
+        <div class="well">
+          <p> 
+            <% var movieLink = '/movies/' + movies[i]["MOVIE_ID"] %>
+            <a href=<%= movieLink %>>
+              <button class="btn btn-primary"><strong><span class="fa fa-file-video-o"></span>&nbsp;&nbsp;&nbsp;"<%= movies[i]["TITLE_YEAR"] %>"</strong></button>
+            </a>
+          </p>
+          <div class="review">
+   
+              <div>
+              <p><img src = <%= movies[i]["POSTER"] %> alt = <%= movies[i]["TITLE_YEAR"] %> /><p>
+              </div>
+              <div class="para">
+                <p> <strong>Name: </strong> <%= movies[i]["TITLE_YEAR"] %> </p>
+                <p> <strong>Runtime: </strong> <%= movies[i]["RUNTIME"] %> 
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>Release date: </strong> <%= movies[i]["RELEASE_DATE"] %></p>
+                <p> <strong>MPAA: </strong> <%= movies[i]["MPAA"] %> 
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>Popularity: </strong> <%= movies[i]["POPULARITY"] %> (likes) </p>
+                <p> <strong>Rotten tomatoes' rating: </strong> <%= movies[i]["RT_AUDIENCE_RATING"] %>/100 </p>
+                <p> <strong>Countries: </strong> <%= movies[i]["COUNTRIES"] %> </p>
+                <p> <strong>Genres: </strong> <%= movies[i]["GENRES"] %> </p>    
+              </div>           
 
-      <div class="well">
-        <button class="btn btn-info bt-xs"><h3><span class="fa fa-comments"></span> Artists cooperated:  </h3></button>
-        
+          </div>
+        </div>
       </div>
-    </div>
+    <% } %>
 <script src="../../js/bootstrap.min.js"></script>
 <script src="../../js/jquery.js"></script>
-<script src="../../js/bootstrap.js"></script>     
+<script src="../../js/bootstrap.js"></script> 
 </body>
 </html>
