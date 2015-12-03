@@ -7,7 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , bing = require('./routes/bing')
 
 //var productCategoryRoute = require('./routes/productCategoryRouteConfig.js');
 var app = express();
@@ -45,13 +46,9 @@ app.post('/result', routes.results);
 app.get('/category/genres/:value', routes.getGenres);
 app.get('/category/years/:value', routes.getYears);
 app.get('/category/tag/:value', routes.getTag);
-
-//app.get('/contact', routes.contact);
-//app.get('/result', routes.results);
-
+app.post('/bing', bing.postSearchResults);
 
 //new productCategoryRoute(app);
-
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
