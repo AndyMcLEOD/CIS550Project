@@ -47,7 +47,7 @@
           </ul>
           <form action='/result' method="post" class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" size="31" placeholder="Search movies or people here" name="searchContent">
+              <input type="text" class="form-control" size="25" placeholder="Search movies or people here" name="searchContent">
             </div>
             <select name="searchType" size="1">
                     <option value="title" selected> title </option>
@@ -59,13 +59,7 @@
             </select>
             <button type="submit" class="btn btn-success">Search</button>
           </form>
-         <form method ="post" id ="bingSearchForm" action ="/bing" class="navbar-form navbar-left" role="search">
-            <div class="form-group">
-                <input type="search"  results= "s" class="form-control" size="20" placeHolder = "  Bing! Search" name="bingSearchContent"/>
-            </div>
-          </form>
           
-
           <% if(!isLogin){ %>
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
@@ -80,6 +74,20 @@
               </li>
             </ul>
           <% }else{ } %>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Bing <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <form method ="post" id ="bingSearchForm" action ="/bing" class="navbar-form navbar-left" role="search">
+                  <div class="form-group">
+                    <input type="search"  results= "s" class="form-control" size="20" placeHolder = "  Bing! Search" name="bingSearchContent"/>
+                  </div>
+                </form>
+              </ul>
+            </li>
+          </ul>
+
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
