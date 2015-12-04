@@ -15,6 +15,10 @@ connection.connect();
 
 
 exports.getMovies = function(req, res){
+	console.log(req.user);
+	console.log("===");
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 
 	var query1 = "select * from MOVIES where POSTER <> '' " + 
 				 " and POSTER <> 'None' order by RAND() desc limit 20";
@@ -23,13 +27,21 @@ exports.getMovies = function(req, res){
 		if(err)
 			throw err;
 		res.render('index', { movies: movies,
-							  isLogin: false});
+							  isLogin: isLogin});
 	});	
 };
 
 exports.movieDetails = function(req, res){
+	var isLogin = false;
+	var uid = 0;
+	if(req.isAuthenticated()){ 
+		isLogin = true; 
+		uid = req.user.id; 
+	}
 	var mid = req.params.id;
+
 	console.log(mid);
+
 	var query1 = "select * from MOVIES where MOVIE_ID = " + mid + " limit 20"; 
 	var query2 = "select * from MOVIE_GENRE where IMDB = " + mid + " limit 30";
 	var query3 = "select distinct * from Movies_Tags where IMDB = " + mid + " limit 121";
@@ -42,7 +54,20 @@ exports.movieDetails = function(req, res){
 				+ " inner join MOVIES m ON mg2.IMDB = m.MOVIE_ID "
 				+ " where m.POSTER <> '' and m.TMDB_RATING > 3 " 
 				+ " and mg1.IMDB <> mg2.IMDB and mg1.IMDB = " + mid + "  LIMIT 4";
+	var query9 = "select * from likes where uid = " + uid + " and mid = " + mid;
+
+	var like = false;
+	connection.query(query9, function(err, result){
+		if(err) throw err;
+		console.log(query9);
+		console.log(result);
+		if(result.length > 0){ like = true; }
+		console.log(result.length);
+		console.log(like);
+	});
+
 	connection.query(query1, function(err, movies){		      		//query MOVIES
+		if(!movies){ res.render('404', { isLogin: isLogin }); return; }
 		if(err) throw err;
 		console.log(query1);
 		console.log(movies);
@@ -85,7 +110,7 @@ exports.movieDetails = function(req, res){
 								if(err) throw err;
 								connection.query(query8, function(err, recommendations){
 									if(err) throw err;
-									res.render('movieDetails', { isLogin: false, 
+									res.render('movieDetails', { isLogin: isLogin, 
 									 	 				movies: movies[0],
 									 	 				genres: genre, 
 									 	 				tags: tag,
@@ -93,7 +118,8 @@ exports.movieDetails = function(req, res){
 									 	 				actors: actors,
 									 	 				trailers: trailers,
 									 	 				reviews: reviews,
-									 	 				rec1: recommendations});
+									 	 				rec1: recommendations,
+									 	 				like: like});
 								})
 							})
 						});
@@ -105,16 +131,20 @@ exports.movieDetails = function(req, res){
 };
 
 exports.getArtists = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 	var query1 = "select * from PERSON_INFO where PROFILE<>'' and BIOGRAPHY<>'' ";
 	connection.query(query1, function(err, artists){
 		if(err) throw err;
 		console.log(artists[0]);
-		res.render('artist', { isLogin: false,
+		res.render('artist', { isLogin: isLogin,
 								artists: artists});
 	});
 };
 
 exports.artistDetails = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 	var aid = req.params.id; 
 	console.log(aid);
 	var query1 = "select * from PERSON_INFO where ID = " + aid;
@@ -122,8 +152,14 @@ exports.artistDetails = function(req, res){
 	var query3 = "select m.MOVIE_ID, ma.CHARACTER, ma.TITLE, m.POSTER "
 				+ " from movies_actors1 ma inner join MOVIES m on ma.IMDBID = m.MOVIE_ID "
 				+ " where PERSON_ID = " + aid + " limit 8";
+	var query4 = "select distinct pi.ID, pi.NAME, ma2.TITLE, pi.PROFILE "
+				+ " from movies_actors1 ma1 inner join movies_actors1 ma2 on ma1.IMDBID = ma2.IMDBID "
+				+ " inner join PERSON_INFO pi on ma2.PERSON_ID = pi.ID "
+				+ " WHERE ma1.PERSON_ID = " + aid + " and ma1.PERSON_ID <> ma2.PERSON_ID and pi.PROFILE <> '' "
+				+ " limit 12";
 	
 	connection.query(query1, function(err, artist){
+		if(!artist){ res.render('404', { isLogin: isLogin }); return; }
 		if(err) throw err;
 		connection.query(query2, function(err, aliases){
 			if(err) throw err;
@@ -133,16 +169,22 @@ exports.artistDetails = function(req, res){
 				for(var i = 1; i < aliases.length; i++){ aliase = aliase + " | " + aliases[i]["ALIASE"] }}
 			connection.query(query3, function(err, acting){
 				if(err) throw err;
-				res.render('artistDetails', { isLogin: false,
-									  artist: artist[0],
-									  aliases: aliase,
-									  actings: acting});
+				connection.query(query4, function(err, cooperators){
+					if(err) throw err;
+					res.render('artistDetails', { isLogin: isLogin,
+									  			artist: artist[0],
+									  			aliases: aliase,
+									  			actings: acting,
+												co: cooperators});
+				});
 			});
 		});	
 	});
 };
 
 exports.getReviews = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 
 	var query1 = "select distinct r.IMDB, r.REVIEW_ID, r.QUOTE, r.CRITIC, mt.TITLE, mt.POSTER "
  			   + " from REVIEWS r inner join movies_trailers mt on r.IMDB = mt.IMDB "
@@ -152,22 +194,27 @@ exports.getReviews = function(req, res){
 		if(err)
 			throw err;
 		res.render('review', { reviews: reviews,
-							   isLogin: false });
+							   isLogin: isLogin });
 	});
 	
 };
 
 exports.reviewDetails = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
+
 	var rid = req.params.id;
 	var query1 = "select * from REVIEWS r inner join MOVIES m on r.IMDB = m.MOVIE_ID "
 				 + " WHERE r.REVIEW_ID = " + rid;
 
 	connection.query(query1, function(err, review){
+		if(!review){ res.render('404', { isLogin: isLogin }); return; }
+		if(err) throw err;
 		console.log(query1);
 		var query2 = "select * from REVIEWS where IMDB = " + review[0]["IMDB"] + " and REVIEW_ID <> " + rid;
 		console.log(query2);
 		connection.query(query2, function(err, otherReviews){
-			res.render('reviewDetails', { isLogin: false,
+			res.render('reviewDetails', { isLogin: isLogin,
 										review: review[0],
 										otherReviews: otherReviews });
 		});
@@ -175,27 +222,51 @@ exports.reviewDetails = function(req, res){
 }
 
 exports.getTrailers = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 	var query1 = "select * from movies_trailers where TRAILER<>'null' and POSTER<>'null' limit 20";
 	connection.query(query1, function(err, trailers){
 		if(err) throw err;
-		res.render('trailers', { isLogin: false,
+		res.render('trailers', { isLogin: isLogin,
 								 trailers: trailers});
 	});
 }
 
-exports.about = function(req, res){
-
-	res.render('about.ejs', { title: "about", message: "this is about page...", date: new Date()  });
-	
+exports.like = function(req, res){
+	if(!req.isAuthenticated()){ 
+		res.redirect('/');
+		return;
+	}
+	var uid = req.user.id;
+	var mid = req.params.id;
+	var isLogin = true;
+	var query1 = "insert into likes values(" + uid + ", " + mid + ");"
+	connection.query(query1, function(err, result){
+		console.log(query1);
+		var goBackLink = "/movies/" + mid;
+		res.redirect(goBackLink);
+	});
 };
-
-exports.contact = function(req, res){
-
-	res.render('contact.ejs', { title: "contact", message: "this is contact page...", date: new Date()  });
-	
+//res.render('contact.ejs', { title: "contact", message: "this is contact page...", date: new Date()  });
+exports.cancelLike = function(req, res){
+	if(!req.isAuthenticated()){ 
+		res.redirect('/');
+		return;
+	}
+	var uid = req.user.id;
+	var mid = req.params.id;
+	var isLogin = true;
+	var query1 = "delete from likes where uid = " + uid + " and mid = " + mid;
+	connection.query(query1, function(err, result){
+		console.log(query1);
+		var goBackLink = "/movies/" + mid;
+		res.redirect(goBackLink);
+	});
 };
 
 exports.results = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 	var content = req.body.searchContent;
 	var type = req.body.searchType;
 	console.log(type);
@@ -209,7 +280,8 @@ exports.results = function(req, res){
 					+ " limit 200";
 		connection.query(query, function(err, movies){
 			if(err) throw err;
-			res.render('movieResult', { isLogin: false,
+			if(!movies){ res.render('404', { isLogin: isLogin }); return; }
+			res.render('movieResult', { isLogin: isLogin,
 										movies: movies });
 		});
 	}
@@ -221,7 +293,8 @@ exports.results = function(req, res){
 					+ " limit 200";
 		connection.query(query, function(err, movies){
 			if(err) throw err;
-			res.render('movieResult', { isLogin: false,
+			if(!movies){ res.render('404', { isLogin: isLogin }); return; }
+			res.render('movieResult', { isLogin: isLogin,
 										movies: movies });
 		});
 	}
@@ -232,8 +305,9 @@ exports.results = function(req, res){
 					+ " where m.TITLE_YEAR like '%" + content + "%'"
 					+ " limit 200"; 
 		connection.query(query, function(err, movies){
+			if(!movies){ res.render('404', { isLogin: isLogin }); return; }
 			if(err) throw err;
-			res.render('movieResult', { isLogin: false,
+			res.render('movieResult', { isLogin: isLogin,
 										movies: movies });
 		});
 	}
@@ -245,7 +319,8 @@ exports.results = function(req, res){
 					+ " limit 200"; 
 		connection.query(query, function(err, movies){
 			if(err) throw err;
-			res.render('movieResult', { isLogin: false,
+			if(!movies){ res.render('404', { isLogin: isLogin }); return; }
+			res.render('movieResult', { isLogin: isLogin,
 										movies: movies });
 		});
 	}
@@ -257,8 +332,9 @@ exports.results = function(req, res){
 				+ "	where mta.TAG LIKE '%" + content + "%'"
 				+ " LIMIT 8";
 		connection.query(query, function(err, movies){
+			if(!movies){ res.render('404', { isLogin: isLogin }); return; }
   			if(err) throw err;
-			res.render('movieResult', { isLogin: false,
+			res.render('movieResult', { isLogin: isLogin,
 										movies: movies });
   		});
 	}
@@ -269,7 +345,8 @@ exports.results = function(req, res){
   					+ " WHERE NAME like '%" + content + "%'";
   		connection.query(query, function(err, actors){
   			if(err) throw err;
-  			res.render('actorResult', { isLogin: false,
+  			if(!actors){ res.render('404', { isLogin: isLogin }); return; }
+  			res.render('actorResult', { isLogin: isLogin,
   										actors: actors });
   		});
 	}
@@ -278,6 +355,9 @@ exports.results = function(req, res){
 
 
 exports.getGenres = function(req, res){
+
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 	var genre = req.params.value;
 	console.log(genre);
 	var query1 = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
@@ -287,12 +367,14 @@ exports.getGenres = function(req, res){
 				+ " limit 200";
 	connection.query(query1, function(err, movies){
 		if(err) throw err;
-		res.render('movieResult', { isLogin: false,
+		res.render('movieResult', { isLogin: isLogin,
 									movies: movies });
 	});				
 };
 
 exports.getYears = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 	var year = req.params.value;
 	console.log(year);
 	var query1 = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
@@ -302,12 +384,14 @@ exports.getYears = function(req, res){
 					+ " limit 200"; 
 	connection.query(query1, function(err, movies){
 		if(err) throw err;
-		res.render('movieResult', { isLogin: false,
+		res.render('movieResult', { isLogin: isLogin,
 									movies: movies });
 	});	
 };
 
 exports.getTag = function(req, res){
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 	var tag = req.params.value;
 	console.log(tag);
 	var query1 = "select DISTINCT m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
@@ -318,13 +402,16 @@ exports.getTag = function(req, res){
 				+ " LIMIT 8";
 	connection.query(query1, function(err, movies){
 		if(err) throw err;
-		res.render('movieResult', { isLogin: false,
+		res.render('movieResult', { isLogin: isLogin,
 									movies: movies });
 	});	
 };
 
 
 exports.get_classes = function(req, res){
+
+	var isLogin = false;
+	if(req.isAuthenticated()){ isLogin = true; }
 
 		var query1 = connection.query('SELECT DISTINCT(GENRE) FROM MOVIE_GENRE', function(err, genres){
 
@@ -340,7 +427,7 @@ exports.get_classes = function(req, res){
 						var tags = new Array(30);
 						for(var i = 0; i < 30; i++)   tags[i] = tags_temp[i]["TAG"]
 
-						res.render('categories.ejs', {genres_list: genres, years_list: years, tags_list: tags, isLogin: false});
+						res.render('categories.ejs', {genres_list: genres, years_list: years, tags_list: tags, isLogin: isLogin});
 					});
 	});
 };

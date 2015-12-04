@@ -27,6 +27,13 @@ select {
     margin-top: 6px;
 }
 
+/*i { 
+    position: absolute; 
+    top: 0px;
+    left: 110px; 
+}
+*/
+
 body > div {
     margin-top: 50px;
 }
