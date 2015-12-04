@@ -21,6 +21,10 @@
     .fb {
         margin-left: 50px;
     }
+
+    .name {
+        font-size: 200%;
+    }
   </style>
 </head>
 <body>
@@ -86,7 +90,7 @@
       </div><!-- /.container-fluid -->
     </nav>
     <div class="well">
-       <p><img src = <%= user["photo"] %> alt = <%= user["photo"] %> >
+       <p class="name"><img src = <%= user["photo"] %> alt = <%= user["photo"] %> >
        	<% if(user.gender == "male"){ %>
        		<i class="fa fa-male"> </i>
        	<% } %>
