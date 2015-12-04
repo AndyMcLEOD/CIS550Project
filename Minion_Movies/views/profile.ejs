@@ -8,7 +8,19 @@
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/style.css">
   <style>
-    body    { padding-top: 50px; }
+    body { padding-top: 50px; }
+
+    .image {
+        margin-right: -20px;
+    }
+
+    .well {
+        padding-bottom: 80px;
+    }
+
+    .fb {
+        margin-left: 50px;
+    }
   </style>
 </head>
 <body>
@@ -50,7 +62,7 @@
             <li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span></a>
               <ul class="dropdown-menu">
-              	<li><a href="/profile"><span class="fa fa-user"></span> My minion </a></li>
+              	<li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
               	<li><a href="/myMovie"><span class="fa fa-tv"></span> My Movie </a></li>
                 <li><a href="/logout"><span class="fa fa-facebook"></span> Log out </a></li>
               </ul>
@@ -84,7 +96,7 @@
        	<%= user.name %>
        </p>
        <p>
-        <a href=<%= user.facebookLink %>><button class="btn btn-info bt-xs"><strong><span class="fa fa-facebook"></span>&nbsp;&nbsp;&nbsp;	Go to facebook </button></a>
+        <a href=<%= user.facebookLink %>><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-facebook"></span>&nbsp;&nbsp;&nbsp;	Go to facebook </button></a>
        </p>
     </div>
 
