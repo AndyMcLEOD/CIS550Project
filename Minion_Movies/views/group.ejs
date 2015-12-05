@@ -12,22 +12,31 @@
 
     .image {
         margin-right: -20px;
+        margin-left: -30px;
+    }
+
+    img {
+        width: 60px;
+    }
+
+    .link {
+        margin-top: -80px;
     }
 
     .well {
         padding-bottom: 80px;
     }
 
+    .first {
+        padding-bottom: 15px;
+    }
+
+    h4 {
+        margin-left: 40px;
+    }
+
     .fb {
         margin-left: 30px;
-    }
-
-    .name {
-        font-size: 200%;
-    }
-
-    p > img {
-        width: 10%;
     }
   </style>
 </head>
@@ -100,9 +109,8 @@
     </nav>
 
     <!-- group introduction -->
-    <div class="well">
+    <div class="well first">
       <button class="fb btn btn-default bt-xs"><h3 style="color:navy;"><strong> Welcome to </strong><%= group["gname"] %><strong>!</strong></button>
-      <% var post = '/groupPost/' + group["gid"] %>
       <% if(isHost){ %>
         <% var dismiss = '/dismissGroup/' + group["gid"] %>
         <a href=<%= dismiss %>><button class="btn btn-danger bt-xs"> Dismiss group </button></a>
@@ -111,7 +119,7 @@
         <% if(isJoin){ %>
           <% var quitGroup = '/quitGroup/' + group["gid"] %>
           <a href=<%= quitGroup %>><button class="btn btn-danger bt-xs"><i class="fa fa-check"></i> Joined </button></a>
-          <a href=<%= post %>><button class="btn btn-info bt-xs"> Wanna say somthing? </button></a>
+          <a href="/chatroom"><button class="btn btn-info bt-xs"> Chat Room </button></a>
         <% }else{ %>
           <% var joinGroup = '/joinGroup/' + group["gid"] %>
           <a href=<%= joinGroup %>><button class="btn btn-danger bt-xs"><i class="fa fa-plus"></i> Join </button></a>
@@ -137,10 +145,6 @@
         </span>
       <% } %> 
     </div>
-    
-
-    
-
 
 <script src="../../js/bootstrap.min.js"></script>
 <script src="../../js/jquery.js"></script>

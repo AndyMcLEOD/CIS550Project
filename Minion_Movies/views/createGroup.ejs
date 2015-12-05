@@ -10,27 +10,20 @@
   <style>
     body { padding-top: 50px; }
 
-    .image {
-        margin-right: -20px;
+    .group {
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    .well {
-        padding-bottom: 80px;
+    .groupform {
+        text-align: center;
     }
 
-    .fb {
-        margin-left: 30px;
+    label {
+        color: rgb(255, 255, 255);
+        font-size: 150%;
     }
-
-    .name {
-        font-size: 200%;
-    }
-
-    p > img {
-        width: 10%;
-    }
-
-	
   </style>
 </head>
 <body>
@@ -102,14 +95,14 @@
     </nav>
     
 
-    <form action="/createGroup" method="post">
+  <form class="groupform" action="/createGroup" method="post">
 		<div class="form-group">
 			<label>Group name: </label>
-			<input type="text" class="form-control" name="groupName">
+			<input type="text" class="form-control group" name="groupName">
 		</div>
 		<div class="form-group">
 			<label>Group description:</label>
-			<textarea type="text" class="form-control" name="groupDescription" rows="10" ></textarea>
+			<textarea type="text" class="form-control group" name="groupDescription" rows="10" ></textarea>
 		</div>
 		<button type="submit" class="btn btn-warning btn-lg"> Create </button>
 	</form>
