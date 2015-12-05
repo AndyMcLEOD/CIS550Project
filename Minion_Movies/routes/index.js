@@ -408,7 +408,7 @@ exports.getTag = function(req, res){
 };
 
 
-exports.get_classes = function(req, res){
+/*exports.get_classes = function(req, res){
 
 	var isLogin = false;
 	if(req.isAuthenticated()){ isLogin = true; }
@@ -430,5 +430,41 @@ exports.get_classes = function(req, res){
 						res.render('categories.ejs', {genres_list: genres, years_list: years, tags_list: tags, isLogin: isLogin});
 					});
 	});
-};
+};*/
 
+exports.get_classes = function(req, res){
+	var MongoClient = require('mongodb').MongoClient
+	  , assert = require('assert');
+	var url = 'mongodb://Minions:1234567890@ds057954.mongolab.com:57954/cis550_project';
+	
+	MongoClient.connect(url, function(err, db) {
+		  assert.equal(null, err);
+		  console.log("Connected correctly to server");
+		  
+		  var collection = db.collection('MOVIE_GENRE');
+		  collection.distinct('GENRE', function(err, genres) {
+			  var collection2 = db.collection('Movies_Tags');
+			  
+			  collection2.aggregate(
+					  [
+					   { $group: { _id: "$TAG", count: {$sum:1} } },
+					   { $sort : { count : -1} }
+					  ]
+			  ).limit(30).toArray(function(err, tags_tmp) {
+				  assert.equal(err, null);
+			  
+				  var tags = JSON.parse(JSON.stringify(tags_tmp));
+				  
+				  var years = new Array(30);
+				  for(var i = 0, start = 1987; i <= 30; i++)   years[i] = start + i;
+				  
+				  var tags_trim = new Array(30);
+				  for(var i = 0; i < 30; i++)   tags_trim[i] = tags[i]["_id"]
+				  
+				  res.render('categories.ejs', {genres_list: genres, years_list: years, tags_list: tags_trim, isLogin: false});
+				  
+				  db.close();
+			  });
+		  });
+	});
+}

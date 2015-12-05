@@ -104,8 +104,8 @@
           <TR height="30">
             <% for(var col = 0; col < colNum && row*colNum + col < genres_list.length; col++) {%>
             <TD width="100">
-            <% var genreLink = "/category/genres/" + genres_list[row*colNum + col]["GENRE"] %>
-            <a href=<%= genreLink %>> <%= genres_list[row*colNum + col]["GENRE"] %>  </a>
+            <% var genreLink = "/category/genres/" + genres_list[row*colNum + col] %>
+            <a href=<%= genreLink %>> <%= genres_list[row*colNum + col] %>  </a>
             </TD>
           <%} %>
           </TR>
