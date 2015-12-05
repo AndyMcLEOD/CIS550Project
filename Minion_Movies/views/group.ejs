@@ -114,7 +114,7 @@
       <% if(isHost){ %>
         <% var dismiss = '/dismissGroup/' + group["gid"] %>
         <a href=<%= dismiss %>><button class="btn btn-danger bt-xs"> Dismiss group </button></a>
-        <a href=<%= post %>><button class="btn btn-info bt-xs"> Wanna say somthing? </button></a>
+        <a href="/chatroom"><button class="btn btn-info bt-xs"> Chat Room </button></a>
       <% }else{ %>
         <% if(isJoin){ %>
           <% var quitGroup = '/quitGroup/' + group["gid"] %>
