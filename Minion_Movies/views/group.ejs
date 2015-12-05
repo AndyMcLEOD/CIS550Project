@@ -5,25 +5,29 @@
   <title>Minion Movies</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!-- load fontawesome -->
-  <link rel="stylesheet" href="stylesheets/bootstrap.css">
-  <link rel="stylesheet" href="stylesheets/style.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/style.css">
   <style>
-    body    { padding-top: 80px; }
+    body { padding-top: 50px; }
 
-    .auto-play {
-        margin-left: -125px;
+    .image {
+        margin-right: -20px;
     }
 
-    .review > div {
-        display: inline-block;
+    .well {
+        padding-bottom: 80px;
     }
 
-    .para {
-        text-align: left;
+    .fb {
+        margin-left: 30px;
     }
 
-    a > button {
-        margin-left: 50px;
+    .name {
+        font-size: 200%;
+    }
+
+    p > img {
+        width: 10%;
     }
   </style>
 </head>
@@ -40,11 +44,17 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
-            <li class="active"><a href="/artists"> Artists </a></li>
-            <li><a href="/reviews"> Reviews </a></li>
-            <li><a href="/categories"> Categories </a></li>
-            <li><a href="/trailers"> Trailers </a></li>
+            <li><a href="/users"> Users </a></li>
+            <li><a href="/events"> Events </a></li>
+            <li><a href="/forum"> Forum </a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Groups <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/allGroups"><i class="fa fa-users"></i> All Groups </a></li>
+                <li><a href="/createGroup"><i class="fa fa-users"></i> Create Group </a></li>
+              </ul></li>
           </ul>
+
           <form action='/result' method="post" class="navbar-form navbar-left" role="search">
             <div class="form-group">
               <input type="text" class="form-control" size="20" placeholder="Search movies or people here" name="searchContent">
@@ -59,27 +69,18 @@
             </select>
             <button type="submit" class="btn btn-default">Search</button>
           </form>
-          <% if(!isLogin){ %>
-            <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown">
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Log in <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="/auth/facebook"><span class="fa fa-facebook"></span> Facebook </a></li>
-                </ul>
-              </li>
-            </ul>
-          <% }else{ %>
-            <ul class="nav navbar-nav navbar-right">
+
+          
+          <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
-                <li><a href="/myMovie"><span class="fa fa-tv"></span> My Movie </a></li>
+              	<li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
+              	<li><a href="/myMovie"><span class="fa fa-tv"></span> My Movie </a></li>
                 <li><a href="/logout"><span class="fa fa-facebook"></span> Log out </a></li>
               </ul>
             </li>
           </ul>
-          <% } %>
 
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
@@ -98,33 +99,49 @@
       </div><!-- /.container-fluid -->
     </nav>
 
-    <!--==================================================================================================================-->
+    <!-- group introduction -->
+    <div class="well">
+      <button class="fb btn btn-default bt-xs"><h3 style="color:navy;"><strong> Welcome to </strong><%= group["gname"] %><strong>!</strong></button>
+      <% var post = '/groupPost/' + group["gid"] %>
+      <% if(isHost){ %>
+        <% var dismiss = '/dismissGroup/' + group["gid"] %>
+        <a href=<%= dismiss %>><button class="btn btn-danger bt-xs"> Dismiss group </button></a>
+        <a href=<%= post %>><button class="btn btn-info bt-xs"> Wanna say somthing? </button></a>
+      <% }else{ %>
+        <% if(isJoin){ %>
+          <% var quitGroup = '/quitGroup/' + group["gid"] %>
+          <a href=<%= quitGroup %>><button class="btn btn-danger bt-xs"><i class="fa fa-check"></i> Joined </button></a>
+          <a href=<%= post %>><button class="btn btn-info bt-xs"> Wanna say somthing? </button></a>
+        <% }else{ %>
+          <% var joinGroup = '/joinGroup/' + group["gid"] %>
+          <a href=<%= joinGroup %>><button class="btn btn-danger bt-xs"><i class="fa fa-plus"></i> Join </button></a>
+        <% } %>
+      <% } %>
 
-    <!-- Reviews: every div shows one review tuple -->
-    <% for(var i = 0; i < actors.length; i++){ %>
-      <div class="container">
-        <div class="well">
-          <div class="review">
-            <div> 
-              <p><img src = <%= actors[i]["PROFILE"] %> alt = <%= actors[i]["PROFILE"] %> /><p>
-                <p> 
-                  <% var artistLink = '/artists/' + actors[i]["ID"] %>
-                  <a href=<%= artistLink %>>
-                  <button class="btn btn-primary"><strong><span class="fa fa-user"></span>&nbsp;&nbsp;&nbsp;"<%= actors[i]["NAME"] %>"</strong></button>
-                  </a>
-                </p>
-              <p> <strong> Born: </strong> <%= actors[i]["DAY_OF_BIRTH"] %> </p>
-              <% if(actors[i]["DAY_OF_DEATH"]){ %>
-                  <p> <strong> Died: </strong> <%= actors[i]["DAY_OF_DEATH"] %> </p>
-              <% } %>
-              <% if(actors[i]["BIOGRAPHY"]){ %>
-                <p> <strong> Biography: </strong> <%= actors[i]["BIOGRAPHY"].substring(0, 100); %>...... </p>  
-              <% } %>           
-            </div>
-          </div>
-        </div>
-      </div>
-    <% } %>
+      <h4>Host: <%= group["name"] %></h4>
+      <p></p>
+      <h4>Description:&nbsp;&nbsp;<i><%= group["description"] %></i></h4>
+    </div>
+
+    <!-- group members -->
+    <div class="well">
+      <p><button class="btn btn-danger bt-xs"><span class="fa fa-users"></span> Group members: </button></p>
+      <% for(var i = 0; i < members.length; i++){ %>
+        <% var id =  members[i]["id"] %>
+        <% var link = "/user/" + members[i]["id"] %>
+        <span class="image">
+          <a href = <%= link %>>
+            <img src = <%= members[i]["photo"] %> alt = <%= members[i]["photo"] %> />
+          </a>
+          <a href = <%= link %> class="link"><%= members[i]["name"] %></a>
+        </span>
+      <% } %> 
+    </div>
+    
+
+    
+
+
 <script src="../../js/bootstrap.min.js"></script>
 <script src="../../js/jquery.js"></script>
 <script src="../../js/bootstrap.js"></script> 

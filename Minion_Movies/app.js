@@ -61,6 +61,20 @@ if ('development' == app.get('env')) {
 require('./routes/auth.js')(app, passport);
 app.get('/like/:id', routes.like);
 app.get('/cancelLike/:id', routes.cancelLike);
+app.get('/users', routes.getUsers);
+app.get('/user/:id', routes.visitUser);
+app.get('/follow/:id', routes.follow);
+app.get('/cancelFollow/:id', routes.cancelFollow);
+app.get('/getFollows', routes.getFollows);
+app.get('/getFollower', routes.getFollower);
+app.get('/likedMovies', routes.userMovies);
+app.get('/createGroup', routes.groupForm);
+app.post('/createGroup', routes.createGroup);
+app.get('/allGroups', routes.getGroups);
+app.get('/group/:id', routes.groupDetails);
+app.get('/dismissGroup/:id', routes.dismissGroup);
+app.get('/joinGroup/:id', routes.joinGroup);
+app.get('/quitGroup/:id', routes.quitGroup);
 //========================================================//
 app.get('/movies/:id', routes.movieDetails);
 app.get('/', routes.getMovies);

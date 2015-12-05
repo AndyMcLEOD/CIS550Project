@@ -120,8 +120,8 @@ exports.movieDetails = function(req, res){
 									 	 				reviews: reviews,
 									 	 				rec1: recommendations,
 									 	 				like: like});
-								})
-							})
+								});
+							});
 						});
 					});
 				});
@@ -263,6 +263,209 @@ exports.cancelLike = function(req, res){
 		res.redirect(goBackLink);
 	});
 };
+
+exports.userMovies = function(req, res){
+	if(!req.isAuthenticated()){ 
+		res.redirect('/');
+		return;
+	}
+	var uid = req.user.id;
+	var query1 = "select * from likes inner join MOVIES on MOVIE_ID = mid where uid = " + uid;
+	connection.query(query1, function(err, movies){
+		if(err) throw err;
+		res.render('likedMovies', { favourate: movies});
+	});
+}
+
+exports.getUsers = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var uid = req.user.id;
+	var query1 = "select * from user where id <> " + uid;
+	connection.query(query1, function(err, users){
+		if(err) throw err;
+		res.render('users', { users: users });
+	});
+}
+
+exports.follow = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var user1 = req.user.id;
+	var user2 = req.params.id;
+	var query1 = "insert into follow value (" + user1 + ", " + user2 + ")";
+	connection.query(query1, function(err, result){
+		if(err) throw err;
+		var goBackLink = "/user/" + user2;
+		res.redirect(goBackLink);
+	});
+}
+
+exports.cancelFollow = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var user1 = req.user.id;
+	var user2 = req.params.id;
+	var query1 = "delete from follow where user1 = " + user1 + " and user2 = " + user2;
+	connection.query(query1, function(err, result){
+		if(err) throw err;
+		var goBackLink = "/user/" + user2;
+		res.redirect(goBackLink);
+	});
+}
+
+exports.getFollows = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var user1 = req.user.id;
+	var query1 = "select * from follow inner join user on user2 = id where user1 = " + user1;
+	connection.query(query1, function(err, users){
+		if(err) throw err;
+		res.render('users', { users: users });
+	});
+}
+
+exports.getFollower = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var user2 = req.user.id;
+	var query1 = "select * from follow inner join user on user1 = id where user2 = " + user2;
+	connection.query(query1, function(err, users){
+		if(err) throw err;
+		res.render('users', { users: users });
+	});
+}
+
+exports.visitUser = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var user1 = req.user.id;
+	var user2 = req.params.id;
+	if(user1 == user2){ res.redirect('/profile'); return; }
+	var user;
+	var followed = false;
+	var query1 = "select * from user where id = " + user2;
+	var query2 = "select * from follow where user1 = " + user1 + " and user2 = " + user2;
+	connection.query(query1, function(err, users){
+		if(err) throw err;
+		user = users[0];
+	});
+	connection.query(query2, function(err, follow){
+		if(err) throw err;
+		if(follow.length > 0){ followed = true; }
+		res.render('otherUser', { user: user, followed: followed });
+	});
+}
+
+
+exports.groupForm = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	res.render('createGroup');
+}
+
+exports.createGroup = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var gid = 0;
+	var groupName = req.body.groupName;
+	var creatorId = req.user.id;
+	var description = req.body.groupDescription;
+	var query1 = "insert into GROUPS(gname, creatorId, description) values ('" 
+		+ groupName + "', " + creatorId + ", '" + description + "');";
+	connection.query(query1, function(err, result){
+		if(err) throw err;
+		console.log(result);
+		gid = result["insertId"];
+		var query2 = "insert into inGroup values(" + creatorId + ", " + gid + ", '" + groupName + "')";
+		connection.query(query2, function(err, result){
+			if(err) throw err;
+			var goBackLink = "/group/" + gid;
+			res.redirect(goBackLink);
+		});
+	});
+}
+
+exports.joinGroup = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	var gid = req.params.id;
+	var uid = req.user.id;
+	var query1 = "select * from GROUPS where gid = " + gid;
+	connection.query(query1, function(err, group){
+		if(err) throw err;
+		var gname = group[0]["gname"];
+		var query2 = "insert into inGroup values(" + uid + ", " + gid + ", '" + gname + "')";
+		connection.query(query2, function(err, result){
+			if(err) throw err;
+			var goBackLink = "/group/" + gid;
+			res.redirect(goBackLink);
+		});
+	});
+}
+
+exports.quitGroup = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	var gid = req.params.id;
+	var uid = req.user.id;
+	var query1 = "delete from inGroup where uid = " + uid + " and gid = " + gid;
+	connection.query(query1, function(err, result){
+		if(err) throw err;
+		var goBackLink = "/group/" + gid;
+		res.redirect(goBackLink);
+	});
+}
+
+exports.dismissGroup = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var gid = req.params.id;
+	var query1 = "delete from GROUPS where gid = " + gid;
+	connection.query(query1, function(err, result){
+		if(err) throw err;
+		res.redirect('/profile');
+	});
+}
+
+exports.getGroups = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var query1 = "select * from GROUPS inner join user on creatorId = id;";
+	connection.query(query1, function(err, groups){
+		if(err) throw err;
+		res.render('groups', { groups: groups });
+	});
+}
+
+exports.groupDetails = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return;}
+	var gid = req.params.id;
+	var uid = req.user.id;
+	var query1 = "select * from GROUPS INNER JOIN user on creatorId = id where gid = " + gid;
+	var query2 = "select * from GROUPS where creatorId = " + uid + " and gid = " + gid;
+	var query3 = "select * from inGroup where uid = " + uid + " and gid = " + gid;
+	var query4 = "select * from inGroup inner join user on uid = id where gid = " + gid;
+	var group;
+	var isHost = false;
+	var isJoin = false;
+	var groupMembers;
+	connection.query(query1, function(err, groups){
+		if(err) throw err;
+		group = groups[0];
+	});
+	connection.query(query2, function(err, result1){
+		console.log(query2);
+		console.log(result1);
+		if(err) throw err;
+		if(result1.length > 0){ isHost = true; }
+	});
+	connection.query(query3, function(err, result2){
+		console.log(query3);
+		console.log(result2);
+		if(err) throw err;
+		if(result2.length > 0){ isJoin = true; }
+	});
+	connection.query(query4, function(err, members){
+		if(err) throw err;
+		console.log(query4);
+		groupMembers = members;
+		console.log(isHost);
+		console.log(isJoin);
+		res.render('group', { group: group,
+							  isHost: isHost,
+							  isJoin: isJoin,
+							  members: groupMembers });
+	});
+}
 
 exports.results = function(req, res){
 	var isLogin = false;
@@ -407,8 +610,8 @@ exports.getTag = function(req, res){
 	});	
 };
 
-
-/*exports.get_classes = function(req, res){
+/*
+exports.get_classes = function(req, res){
 
 	var isLogin = false;
 	if(req.isAuthenticated()){ isLogin = true; }
@@ -463,8 +666,9 @@ exports.get_classes = function(req, res){
 				  
 				  res.render('categories.ejs', {genres_list: genres, years_list: years, tags_list: tags_trim, isLogin: false});
 				  
-				  db.close();
+				  //db.close();
 			  });
 		  });
 	});
 }
+

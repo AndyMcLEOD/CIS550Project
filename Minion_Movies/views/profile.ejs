@@ -44,10 +44,15 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="/"> Movies <span class="sr-only">(current)</span></a></li>
-            <li><a href="/artists"> Artists </a></li>
-            <li><a href="/reviews"> Reviews </a></li>
-            <li><a href="/categories"> Categories </a></li>
-            <li><a href="/trailers"> Trailers </a></li>
+            <li><a href="/users"> Users </a></li>
+            <li><a href="/events"> Events </a></li>
+            <li><a href="/forum"> Forum </a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Groups <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/allGroups"><i class="fa fa-users"></i> All Groups </a></li>
+                <li><a href="/createGroup"><i class="fa fa-users"></i> Create Group </a></li>
+              </ul></li>
           </ul>
 
           <form action='/result' method="post" class="navbar-form navbar-left" role="search">
@@ -102,14 +107,30 @@
        		<i class="fa fa-female"> </i>
        	<% } %>
        	<%= user.name %>
+        <a href="/getFollows"><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-heart"></span>&nbsp; Follows(<%= followNum %>) </button></a>
+        <a href="/getFollower"><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-heartbeat"></span>&nbsp; Follower(<%= followerNum %>) </button></a>
        </p>
        <p>
         <a href=<%= user.facebookLink %>><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-facebook"></span>&nbsp;&nbsp;&nbsp;	Go to facebook </button></a>
        </p>
     </div>
 
+
     <div class="well">
-      <p><button class="btn btn-warning bt-xs"><h3><span class="fa fa-thumbs-up"></span> You like: </h3></button></p>
+      <p><a href="/allGroups"><button class="btn btn-danger bt-xs"><h3><span class="fa fa-users"></span> Groups: </h3></button></a></p>
+      <ul>
+          <% for(var i = 0; i < groups.length; i++) { %>
+            <% var groupLink = '/group/' + groups[i]["gid"] %>
+            <li>
+              <a href = <%= groupLink %>><h3 style="color:navy;"><%= groups[i]["gname"] %></h3></a>
+            </li>
+          <% } %>
+      </ul>
+    </div>
+
+
+    <div class="well">
+      <p><a href="/likedMovies"><button class="btn btn-warning bt-xs"><h3><span class="fa fa-thumbs-up"></span> You like: </h3></button></a></p>
       <% for(var i = 0; i < favourate.length; i++){ %>
         <% var id = favourate[i]["MOVIE_ID"]%>
         <% var link = "/movies/" + favourate[i]["MOVIE_ID"] %>

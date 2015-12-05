@@ -11,13 +11,35 @@ module.exports = function(app, passport){
 
 	app.get('/profile', isLoggedIn, function(req, res){
 		var favourate = "";
+		var followNum = 0;
+		var followerNum = 0;
 		var uid = req.user.id;
 		var query1 = "select * from likes inner join MOVIES on mid = MOVIE_ID where uid = " + uid + " limit 5";
+		var query2 = "select count(user2) from follow where user1 = " + uid + " group by user1;";
+		var query3 = "select count(user1) from follow where user2 = " + uid + " group by user2;";
+		var query4 = "select * from inGroup where uid = " + uid;
 		console.log(query1);
 		connection.query(query1, function(err, movies){
 			if(err) throw err;
-			console.log(movies);
-			res.render('profile', { user: req.user, favourate: movies });
+			favourate = movies;
+		});
+		connection.query(query2, function(err, follows){
+			if(err) throw err;
+			if(follows.length > 0){ followNum = follows[0]["count(user2)"]; }	
+		});
+		connection.query(query3, function(err, followers){
+			if(err) throw err;
+			if(followers.length > 0){ followerNum = followers[0]["count(user1)"]; }
+			
+		});
+		connection.query(query4, function(err, groups){
+			if(err) throw err;
+			res.render('profile', { user: req.user, 
+									favourate: favourate,
+									followNum: followNum,
+									followerNum: followerNum,
+									groups: groups });
+			
 		});
 	});
 
