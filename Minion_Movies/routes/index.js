@@ -15,6 +15,10 @@ connection.connect();
 
 
 exports.getMovies = function(req, res){
+	var string = "h'h'h'h'";
+	console.log("+++++++++++++++++++++");
+	console.log(string.split("'").join("''"));
+	console.log("+++++++++++++++++++++");
 	console.log(req.user);
 	console.log("===");
 	var isLogin = false;
@@ -55,8 +59,14 @@ exports.movieDetails = function(req, res){
 				+ " where m.POSTER <> '' and m.TMDB_RATING > 3 " 
 				+ " and mg1.IMDB <> mg2.IMDB and mg1.IMDB = " + mid + "  LIMIT 4";
 	var query9 = "select * from likes where uid = " + uid + " and mid = " + mid;
-
+	var query10 = "select * from minionReviews where uid = " + uid + " and mid = " + mid + " order by date desc";
 	var like = false;
+	var minionReviews;
+	connection.query(query10, function(err, reviews){
+		if(err) throw err;
+		minionReviews = reviews;
+	});
+
 	connection.query(query9, function(err, result){
 		if(err) throw err;
 		console.log(query9);
@@ -119,7 +129,8 @@ exports.movieDetails = function(req, res){
 									 	 				trailers: trailers,
 									 	 				reviews: reviews,
 									 	 				rec1: recommendations,
-									 	 				like: like});
+									 	 				like: like,
+									 	 				minionReviews: minionReviews});
 								});
 							});
 						});
@@ -221,6 +232,32 @@ exports.reviewDetails = function(req, res){
 	});
 }
 
+
+exports.userReview = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	var uid = req.user.id;
+	var uname = req.user.name;
+	var mid = req.params.id;
+	var review = req.body.review;
+	review = review.split("'").join("''");
+	var mname;
+	var query1 = "select TITLE_YEAR from MOVIES where MOVIE_ID = " + mid;
+	
+	connection.query(query1, function(err, movies){
+		console.log(movies);
+		if(err) throw err;
+		mname = movies[0]["TITLE_YEAR"];
+		var query2 = "insert into minionReviews(uid, uname, mid, mname, review, date) values ("
+				+ uid + ", '" + uname + "', " + mid + ", '" + mname + "', '" + review + "', now());"; 
+		connection.query(query2, function(err, result){
+			console.log(query2);
+			if(err) throw err;
+			var goBackLink = "/movies/" + mid;
+			res.redirect(goBackLink);
+		});
+	});
+}
+
 exports.getTrailers = function(req, res){
 	var isLogin = false;
 	if(req.isAuthenticated()){ isLogin = true; }
@@ -281,9 +318,24 @@ exports.getUsers = function(req, res){
 	if(!req.isAuthenticated()){ res.redirect('/'); return;}
 	var uid = req.user.id;
 	var query1 = "select * from user where id <> " + uid;
+	var query2 = "select * from follow where user1 = " + uid;
+	var user;
+	var isFollow = {};
 	connection.query(query1, function(err, users){
 		if(err) throw err;
-		res.render('users', { users: users });
+		user = users;
+	});
+	connection.query(query2, function(err, follow){
+		if(err) throw err;
+		console.log(follow);
+		var index;
+		for(var i = 0; i < follow.length; i++){
+			index = follow[i]["user2"];
+			isFollow[index] = true;
+		}
+		console.log(isFollow['16']);
+		res.render('users', { users: user,
+							  isFollow: isFollow });
 	});
 }
 
@@ -315,9 +367,16 @@ exports.getFollows = function(req, res){
 	if(!req.isAuthenticated()){ res.redirect('/'); return;}
 	var user1 = req.user.id;
 	var query1 = "select * from follow inner join user on user2 = id where user1 = " + user1;
+	var isFollow = {};
 	connection.query(query1, function(err, users){
 		if(err) throw err;
-		res.render('users', { users: users });
+		var index;
+		for(var i = 0; i < users.length; i++){
+			index = users[i]["user2"];
+			isFollow[index] = true;
+		}
+		res.render('users', { users: users,
+							  isFollow: isFollow });
 	});
 }
 
@@ -325,9 +384,24 @@ exports.getFollower = function(req, res){
 	if(!req.isAuthenticated()){ res.redirect('/'); return;}
 	var user2 = req.user.id;
 	var query1 = "select * from follow inner join user on user1 = id where user2 = " + user2;
+	var query2 = "select * from follow where user1 = " + user2;
+	var isFollow = {};
+	var user;
 	connection.query(query1, function(err, users){
 		if(err) throw err;
-		res.render('users', { users: users });
+		user = users;
+	});
+	connection.query(query2, function(err, follow){
+		if(err) throw err;
+		console.log(follow);
+		var index;
+		for(var i = 0; i < follow.length; i++){
+			index = follow[i]["user2"];
+			isFollow[index] = true;
+		}
+		console.log(isFollow['16']);
+		res.render('users', { users: user,
+							  isFollow: isFollow });
 	});
 }
 
@@ -338,8 +412,12 @@ exports.visitUser = function(req, res){
 	if(user1 == user2){ res.redirect('/profile'); return; }
 	var user;
 	var followed = false;
+	var groups;
+	var favourate;
 	var query1 = "select * from user where id = " + user2;
 	var query2 = "select * from follow where user1 = " + user1 + " and user2 = " + user2;
+	var query3 = "select * from inGroup where uid =" + user2;
+	var query4 = "select * from likes inner join MOVIES on mid = MOVIE_ID where uid = " + user2;
 	connection.query(query1, function(err, users){
 		if(err) throw err;
 		user = users[0];
@@ -347,7 +425,18 @@ exports.visitUser = function(req, res){
 	connection.query(query2, function(err, follow){
 		if(err) throw err;
 		if(follow.length > 0){ followed = true; }
-		res.render('otherUser', { user: user, followed: followed });
+	});
+	connection.query(query3, function(err, group){
+		if(err) throw err;
+		groups = group;
+	});
+	connection.query(query4, function(err, movies){
+		if(err) throw err;
+		favourate = movies;
+		res.render('otherUser', { user: user, 
+								  followed: followed,
+								  groups: groups,
+								  favourate: favourate });
 	});
 }
 
@@ -361,8 +450,10 @@ exports.createGroup = function(req, res){
 	if(!req.isAuthenticated()){ res.redirect('/'); return;}
 	var gid = 0;
 	var groupName = req.body.groupName;
+	groupName = groupName.split("'").join("''");
 	var creatorId = req.user.id;
 	var description = req.body.groupDescription;
+	description = description.split("'").join("''");
 	var query1 = "insert into GROUPS(gname, creatorId, description) values ('" 
 		+ groupName + "', " + creatorId + ", '" + description + "');";
 	connection.query(query1, function(err, result){
@@ -372,7 +463,7 @@ exports.createGroup = function(req, res){
 		var query2 = "insert into inGroup values(" + creatorId + ", " + gid + ", '" + groupName + "')";
 		connection.query(query2, function(err, result){
 			if(err) throw err;
-			var goBackLink = "/group/" + gid;
+			
 			res.redirect(goBackLink);
 		});
 	});
@@ -434,10 +525,12 @@ exports.groupDetails = function(req, res){
 	var query2 = "select * from GROUPS where creatorId = " + uid + " and gid = " + gid;
 	var query3 = "select * from inGroup where uid = " + uid + " and gid = " + gid;
 	var query4 = "select * from inGroup inner join user on uid = id where gid = " + gid;
+	var query5 = "select * from groupPost where gid = " + gid + " order by date desc;";
 	var group;
 	var isHost = false;
 	var isJoin = false;
 	var groupMembers;
+	var groupPosts;
 	connection.query(query1, function(err, groups){
 		if(err) throw err;
 		group = groups[0];
@@ -460,10 +553,71 @@ exports.groupDetails = function(req, res){
 		groupMembers = members;
 		console.log(isHost);
 		console.log(isJoin);
+	});
+	connection.query(query5, function(err, posts){
+		if(err) throw err;
+		console.log(query5);
+		groupPosts = posts;
+		console.log(posts);
 		res.render('group', { group: group,
 							  isHost: isHost,
 							  isJoin: isJoin,
-							  members: groupMembers });
+							  members: groupMembers,
+							  posts: groupPosts });
+	});
+}
+
+exports.post = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	var gid = req.params.id;
+	var uid = req.user.id;
+	var uname = req.user.name;
+	var subject = req.body.subject;
+	subject = subject.split("'").join("''");
+	var content = req.body.content;
+	content = content.split("'").join("''");
+	var query1 = "insert into groupPost(gid, uid, uname, subject, content, date) values("
+ 					+ gid + ", " + uid + ", '" + uname + "', '" + subject + "', '" + content + "', now());";
+	connection.query(query1, function(err, result){
+		if(err) throw err;
+		var goBackLink = "/group/" + gid;
+		res.redirect(goBackLink);
+	});
+}
+
+
+exports.comment = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	var pid = req.params.id;
+	var uid = req.user.id;
+	var uname = req.user.name;
+	var comment = req.body.comment;
+	comment = comment.split("'").join("''");
+	var query1 = "insert into comments(pid, uid, uname, date, comment) values ("
+				+ pid + ", " + uid + ", '" + uname + "', now(), '" + comment +"');";
+	connection.query(query1, function(err, result){
+		if(err) throw err;
+		var goBackLink = "/post/" + pid;
+		res.redirect(goBackLink);
+	});
+}
+
+exports.getPost = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	var pid = req.params.id;
+	var post;
+	var comment;
+	var query1 = "select * from groupPost p inner join GROUPS g on p.gid = g.gid where pid = " + pid;
+	var query2 = "select * from comments where pid = " + pid + " order by date desc;";
+	connection.query(query1, function(err, posts){
+		if(err) throw err;
+		post = posts[0];
+	});
+	connection.query(query2, function(err, comments){
+		if(err) throw err;
+		comment = comments;
+		res.render('post', { post: post,
+							 comments: comment });
 	});
 }
 
@@ -471,6 +625,7 @@ exports.results = function(req, res){
 	var isLogin = false;
 	if(req.isAuthenticated()){ isLogin = true; }
 	var content = req.body.searchContent;
+	content = content.split("'").join("''");
 	var type = req.body.searchType;
 	console.log(type);
 	console.log(content);
@@ -505,10 +660,11 @@ exports.results = function(req, res){
 		query = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
 					+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
 					+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
-					+ " where m.TITLE_YEAR like '%" + content + "%'"
+					+ " where m.TITLE_YEAR like '%(" + content + ")%'"
 					+ " limit 200"; 
 		connection.query(query, function(err, movies){
 			if(!movies){ res.render('404', { isLogin: isLogin }); return; }
+			console.log(query);
 			if(err) throw err;
 			res.render('movieResult', { isLogin: isLogin,
 										movies: movies });
@@ -533,7 +689,7 @@ exports.results = function(req, res){
 				+ " from Movies_Tags mta inner join MOVIES m on mta.IMDB = m.MOVIE_ID "
 				+ " inner join movies_trailers mt on mt.IMDB = m.MOVIE_ID "
 				+ "	where mta.TAG LIKE '%" + content + "%'"
-				+ " LIMIT 8";
+				+ " LIMIT 200";
 		connection.query(query, function(err, movies){
 			if(!movies){ res.render('404', { isLogin: isLogin }); return; }
   			if(err) throw err;
@@ -583,7 +739,7 @@ exports.getYears = function(req, res){
 	var query1 = "select distinct m.MOVIE_ID, m.TITLE_YEAR, m.RUNTIME, m.POSTER, m.POPULARITY, m.MPAA, m.RT_AUDIENCE_RATING, "
 					+ " m.RELEASE_DATE, mt.GENRES, mt.COUNTRIES, m.OVERVIEW"
 					+ " from MOVIES m left outer join movies_trailers mt on m.MOVIE_ID = mt.IMDB" 
-					+ " where m.TITLE_YEAR like '%" + year + "%'"
+					+ " where m.TITLE_YEAR like '%(" + year + ")%'"
 					+ " limit 200"; 
 	connection.query(query1, function(err, movies){
 		if(err) throw err;
@@ -602,7 +758,7 @@ exports.getTag = function(req, res){
 				+ " from Movies_Tags mta inner join MOVIES m on mta.IMDB = m.MOVIE_ID "
 				+ " inner join movies_trailers mt on mt.IMDB = m.MOVIE_ID "
 				+ "	where mta.TAG LIKE '%" + tag + "%'"
-				+ " LIMIT 8";
+				+ " LIMIT 200";
 	connection.query(query1, function(err, movies){
 		if(err) throw err;
 		res.render('movieResult', { isLogin: isLogin,

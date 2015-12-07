@@ -67,7 +67,7 @@
              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
-                <li><a href="/myMovie"><span class="fa fa-tv"></span> My Movie </a></li>
+                <li><a href="/likedMovies"><span class="fa fa-tv"></span> My Movie </a></li>
                 <li><a href="/logout"><span class="fa fa-facebook"></span> Log out </a></li>
               </ul>
             </li>
@@ -185,6 +185,51 @@
           <% } %>
       </div>
 
+        <!-- comment -->
+      <% if(isLogin){ %>
+
+        <div class="well">
+          <p><button class="btn btn-primary bt-lg"><span class="fa fa-comments"></span> Monion reviews: </button></p>
+          <% for(var i = 0; i < minionReviews.length; i++){ %>
+            <table class = "table">
+              <thead>
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <% var userLink = '/user/' + minionReviews[i]["uid"] %>
+                    <p><strong><span class="fa fa-user"></span> <a href=<%= userLink %>><%= minionReviews[i]["uname"] %></a> commented on <%= minionReviews[i]["date"] %>: </strong></p>
+                    <br>
+                    <%= minionReviews[i]["review"] %>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+         <% } %>
+        </div>
+
+
+        <div class="well">
+        <table class = "table">
+        <tr>
+          <td>
+            <% var reviewLink = "/userReview/" + movies["MOVIE_ID"] %>
+            <form action=<%= reviewLink %> method="post">
+              <textarea type="text" class="form-control" placeholder="Put down what you think about this movie here..." name="review" rows="3" ></textarea>
+              <p></p>
+              <button type="submit" class="btn btn-warning"> Comment </button>
+            </form>
+          </td>
+        </tr>
+      </table>
+      </div>
+      <% } %>
     </div>
 <script src="../../js/bootstrap.min.js"></script>
 <script src="../../js/jquery.js"></script>

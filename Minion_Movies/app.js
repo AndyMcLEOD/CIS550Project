@@ -75,6 +75,11 @@ app.get('/group/:id', routes.groupDetails);
 app.get('/dismissGroup/:id', routes.dismissGroup);
 app.get('/joinGroup/:id', routes.joinGroup);
 app.get('/quitGroup/:id', routes.quitGroup);
+app.post('/post/:id', routes.post);
+app.get('/post/:id', routes.getPost);
+app.post('/comment/:id', routes.comment);
+
+app.post('/userReview/:id', routes.userReview);
 //========================================================//
 app.get('/movies/:id', routes.movieDetails);
 app.get('/', routes.getMovies);

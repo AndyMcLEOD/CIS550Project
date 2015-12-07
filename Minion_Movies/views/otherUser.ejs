@@ -12,9 +12,23 @@
 
     .image {
         margin-right: -20px;
-    }
+    }    
 
     .well {
+        margin-bottom: 50px;
+    }
+
+    .middle {
+        padding-bottom: 0px;
+    }
+
+    .middle .link {
+      top: -100px; 
+      right: -200px;
+      margin-left: 150px; 
+    }
+
+    .bottom {
         padding-bottom: 80px;
     }
 
@@ -75,7 +89,7 @@
              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span></a>
               <ul class="dropdown-menu">
               	<li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
-              	<li><a href="/myMovie"><span class="fa fa-tv"></span> My Movie </a></li>
+              	<li><a href="/likedMovies"><span class="fa fa-tv"></span> My Movie </a></li>
                 <li><a href="/logout"><span class="fa fa-facebook"></span> Log out </a></li>
               </ul>
             </li>
@@ -97,27 +111,65 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
+
+
     <div class="well">
        <p class="name"><img src = <%= user["photo"] %> alt = <%= user["photo"] %> >
-       	<% if(user.gender == "male"){ %>
-       		<i class="fa fa-male"> </i>
-       	<% } %>
-		    <% if(user.gender == "female"){ %>
-       		<i class="fa fa-female"> </i>
-       	<% } %>
-       	<%= user.name %>
-        <a href=<%= user.facebookLink %>><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-facebook"></span>&nbsp;&nbsp;&nbsp; Go to facebook </button></a>
-       </p>
-       <p>
+        <% if(user.gender == "male"){ %>
+          <i class="fa fa-male"> </i>
+        <% } %>
+        <% if(user.gender == "female"){ %>
+          <i class="fa fa-female"> </i>
+        <% } %>
+        <%= user.name %>
         <% if(followed){ %>
           <% var cancelFollow= "/cancelFollow/" + user["id"] %>
           <a href=<%= cancelFollow %>><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-check"></span>&nbsp; Followed </button></a>
+          <a href=<%= user.facebookLink %>><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-facebook"></span>&nbsp;&nbsp;&nbsp; See <%= user["name"] %>'s facebook </button></a>
         <% }else{ %>
           <% var followLink = "/follow/" + user["id"] %>
           <a href=<%= followLink %>><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-plus"></span>&nbsp; Follow </button></a>
         <% } %>
        </p>
     </div>
+
+    <% if(followed){ %>
+      <div class="well middle">
+        <% var gender; if(user["gender"] == "male"){ gender = "His"}else{ gender = "Her" } %>
+        <button class="btn btn-danger bt-xs"><h3><span class="fa fa-users"></span> <%= gender %> groups: </h3></button>
+        <ul>
+            <% for(var i = 0; i < groups.length; i++) { %>
+              <% var groupLink = '/group/' + groups[i]["gid"] %>
+              <span class="image">
+               <a class="link" href = <%= groupLink %>><h3 style="color:navy;"><%= groups[i]["gname"] %></h3></a>
+                <img/>
+              </span>
+              <% if(i % 4 == 3){ %>
+              <br>
+              <% } %>
+            <% } %>
+        </ul>
+      </div>
+
+      <div class="well bottom">
+        <button class="btn btn-warning bt-xs"><h3><span class="fa fa-thumbs-up"></span> <%= user["name"] %> likes: </h3></button>
+        <% for(var i = 0; i < favourate.length; i++){ %>
+          <% var id = favourate[i]["MOVIE_ID"]%>
+          <% var link = "/movies/" + favourate[i]["MOVIE_ID"] %>
+          <span class="image">
+            <a href = <%= link %>>
+              <img src = <%= favourate[i]["POSTER"] %> alt = <%= favourate[i]["TITLE_YEAR"] %> />
+            </a>
+            <a href = <%= link %> class="link"><%= favourate[i]["TITLE_YEAR"] %></a>
+          </span>
+        <% } %> 
+      </div>
+    <% } %>
+
+    
+
+
+    
 
     
 

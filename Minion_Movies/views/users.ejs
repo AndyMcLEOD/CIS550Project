@@ -70,7 +70,7 @@
              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span></a>
               <ul class="dropdown-menu">
               	<li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
-              	<li><a href="/myMovie"><span class="fa fa-tv"></span> My Movie </a></li>
+              	<li><a href="/likedMovies"><span class="fa fa-tv"></span> My Movie </a></li>
                 <li><a href="/logout"><span class="fa fa-facebook"></span> Log out </a></li>
               </ul>
             </li>
@@ -92,6 +92,8 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
+
+
     <% for(var i = 0; i < users.length; i++){ %>
     <div class="well">
        <p class="name"><img src = <%= users[i]["photo"] %> alt = <%= users[i]["photo"] %> >
@@ -103,8 +105,14 @@
        	<% } %>
        	<% var userLink = "/user/" + users[i]["id"] %>
        	<a href=<%= userLink %>> <%= users[i].name %> </a>
-       	<% var followLink = "/follow/" + users[i]["id"] %>
-        <a href=<%= followLink %>><button class="fb btn btn-info"><strong><i class="fa fa-plus-circle"></i>&nbsp;Follow </button></a>
+        <% var index = users[i]["id"] %>
+        <% if(isFollow[index]){ %>
+          <% var cancelFollow= "/cancelFollow/" + users[i]["id"] %>
+          <a href=<%= cancelFollow %>><button class="fb btn btn-info bt-xs"><strong><span class="fa fa-check"></span>&nbsp; Followed </button></a>
+        <% }else{ %>
+          <% var followLink = "/follow/" + users[i]["id"] %>
+          <a href=<%= followLink %>><button class="fb btn btn-info"><strong><i class="fa fa-plus"></i>&nbsp;Follow </button></a>
+        <% } %>
        </p>
     </div>
     <% } %>
