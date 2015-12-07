@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <title> <%= title %> </title>
+    <style>
+      body { background-color: black ; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; right:0; width: 80%; }
+      form input { border: 0; padding: 10px; width: 85%; margin-right: .5%; }
+      form button { width: 12.5%; background: rgb(0, 102, 255); border: none; padding: 10px; color:white; }
+      #messages { list-style-type: none; padding: 0; margin-top:60px; margin-bottom:60px }
+      #messages li { padding: 5px 10px; font-size:20px }
+      #people { margin: 0; padding: 0;} 
+      #people li { font-size:20px; text-align: center; background: black;}
+
+      #side span { 
+
+          color:LawnGreen; 
+          font-size: 30px;
+          background-color: black;
+          text-align: center;
+          border-bottom-style: solid;
+          border-bottom-width: 2px;
+          border-bottom-color: LawnGreen;
+      }
+        .container {
+
+          width: 100%;
+          padding: 0px;
+          border: 0;
+          top: 0;
+          left: 0;
+        }
+
+        .container .content {
+
+          width: 1200px;
+          background-color: black ;
+          left: 0;        
+        }
+          
+        .container .sidebar {
+
+          position: fixed;
+          background-color: black ;
+          width: 200px;
+          top: 0;
+          right: 0;
+          border-style: solid;
+          border-width: 2px;
+          border-color: LawnGreen;
+        }
+
+    </style>
+    </head>
+    <body>
+    <table class="container">
+      <tr>
+        <td class="content">
+          <h2 class="header" style="color:LightBlue; border-bottom-style: solid; border-bottom-color:LightBlue; width: 1200px; position: fixed; text-align:center; top: 0; font-size: 30px" > <%= title %> </h2>
+            <ul id="messages"></ul>
+            <form action = "/chatroom">
+              <input id="m" autocomplete="off" /><button type="submit">Send</button>
+            </form>
+        </td>
+        <td class="sidebar" id="side" >
+          <span>In Chat Now</span>  
+          <ul id="people"></ul>
+        </td>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+          var socket = io();
+          $('form').submit(function(){
+
+            socket.emit( 'chat message', $('#m').val() );
+            $('#m').val('');
+            return false;
+          });    
+          socket.on('chat message', function(instream){
+
+            var colorname = instream["color"];
+            var li1 = '<li style=' + colorname + '>';
+            var msg = instream['msg'];
+            $('#messages').append( $(li1).text(msg) );
+          });
+
+          socket.on('update', function(instream){
+
+            var colorname = instream["color"];
+            var li1 = '<li style=' + colorname + '>';
+            var msg = instream['msg'];
+            $('#messages').append( $(li1).text(msg) );
+            $("#people").empty();
+            var people = instream["people"];
+            for(var name in people){
+
+                var sname = people[name]["name"];
+                var color = people[name]["color"];
+                li1 = '<li style=' + color + '>';
+                $('#people').append( $(li1).text(sname) );
+            }
+          });
+        </script>
+      </table>
+    </tr>
+  </body>
+</html>

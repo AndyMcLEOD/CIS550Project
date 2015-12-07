@@ -119,8 +119,9 @@
       <% }else{ %>
         <% if(isJoin){ %>
           <% var quitGroup = '/quitGroup/' + group["gid"] %>
+          <% var chatRoomLink = '/chatRoom/' + group["gid"] %>
           <a href=<%= quitGroup %>><button class="btn btn-danger bt-xs"><i class="fa fa-check"></i> Joined </button></a>
-          <a href="/chatroom"><button class="btn btn-info bt-xs"> Chat Room </button></a>
+          <a href=<%= chatRoomLink %>><button class="btn btn-info bt-xs"> Chat Room </button></a>
         <% }else{ %>
           <% var joinGroup = '/joinGroup/' + group["gid"] %>
           <a href=<%= joinGroup %>><button class="btn btn-danger bt-xs"><i class="fa fa-plus"></i> Join </button></a>
