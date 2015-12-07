@@ -5,7 +5,6 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
   , bing = require('./routes/bing');
@@ -103,17 +102,6 @@ app.post('/bing', bing.postSearchResults);
 
 app.get('/chatroom/:rid', user.chat);
 
-//app.get('/*', routes.otherPages);
-//========================================================//
-
-
-//app.get('/contact', routes.contact);
-//app.get('/result', routes.results);
-
-
-//new productCategoryRoute(app);
-
-
-http.createServer(app).listen(app.get('port'), function(){
+server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

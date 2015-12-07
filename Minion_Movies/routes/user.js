@@ -1,7 +1,6 @@
 var connection = require('./index.js').connection;
 var server = require("../app.js").server;
 var io = require('socket.io').listen(server);
-
 var nname;
 var rname;
 var users = {};
