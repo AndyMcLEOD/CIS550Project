@@ -5,6 +5,7 @@
 
 var express = require('express')
   , routes = require('./routes')
+  , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
   , bing = require('./routes/bing');
@@ -57,6 +58,9 @@ if ('development' == app.get('env')) {
 }
 
 
+
+
+
 require('./routes/auth.js')(app, passport);
 app.get('/like/:id', routes.like);
 app.get('/cancelLike/:id', routes.cancelLike);
@@ -96,8 +100,20 @@ app.get('/category/genres/:value', routes.getGenres);
 app.get('/category/years/:value', routes.getYears);
 app.get('/category/tag/:value', routes.getTag);
 app.post('/bing', bing.postSearchResults);
+
 app.get('/chatroom/:rid', user.chat);
 
-server.listen(app.get('port'), function(){
+//app.get('/*', routes.otherPages);
+//========================================================//
+
+
+//app.get('/contact', routes.contact);
+//app.get('/result', routes.results);
+
+
+//new productCategoryRoute(app);
+
+
+http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

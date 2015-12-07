@@ -84,8 +84,8 @@
             <li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span></a>
               <ul class="dropdown-menu">
-              	<li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
-              	<li><a href="/likedMovies"><span class="fa fa-tv"></span> My Movie </a></li>
+                <li><a href="/profile"><span class="fa fa-user"></span> My Profile </a></li>
+                <li><a href="/likedMovies"><span class="fa fa-tv"></span> My Movie </a></li>
                 <li><a href="/logout"><span class="fa fa-facebook"></span> Log out </a></li>
               </ul>
             </li>
@@ -114,8 +114,9 @@
       <button class="fb btn btn-default bt-xs"><h3 style="color:navy;"><strong> Welcome to </strong><%= group["gname"] %><strong>!</strong></button>
       <% if(isHost){ %>
         <% var dismiss = '/dismissGroup/' + group["gid"] %>
+        <% var chatRoomLink = '/chatRoom/' + group["gid"] %>
         <a href=<%= dismiss %>><button class="btn btn-danger bt-xs"> Dismiss group </button></a>
-        <a href="/chatroom"><button class="btn btn-info bt-xs"> Chat Room </button></a>
+        <a href=<%= chatRoomLink %>><button class="btn btn-info bt-xs"> Chat Room </button></a>
       <% }else{ %>
         <% if(isJoin){ %>
           <% var quitGroup = '/quitGroup/' + group["gid"] %>
