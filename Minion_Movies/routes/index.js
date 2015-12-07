@@ -464,7 +464,7 @@ exports.createGroup = function(req, res){
 		var query2 = "insert into inGroup values(" + creatorId + ", " + gid + ", '" + groupName + "')";
 		connection.query(query2, function(err, result){
 			if(err) throw err;
-			
+			var goBackLink = "/group/" + gid;
 			res.redirect(goBackLink);
 		});
 	});
