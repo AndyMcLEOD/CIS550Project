@@ -78,8 +78,9 @@ app.get('/quitGroup/:id', routes.quitGroup);
 app.post('/post/:id', routes.post);
 app.get('/post/:id', routes.getPost);
 app.post('/comment/:id', routes.comment);
-
 app.post('/userReview/:id', routes.userReview);
+app.get('/textFriends', routes.getTextForm);
+app.post('/textFriend', routes.sendMsg);
 //========================================================//
 app.get('/movies/:id', routes.movieDetails);
 app.get('/', routes.getMovies);
@@ -96,6 +97,8 @@ app.get('/category/genres/:value', routes.getGenres);
 app.get('/category/years/:value', routes.getYears);
 app.get('/category/tag/:value', routes.getTag);
 app.post('/bing', bing.postSearchResults);
+
+//app.get('/*', routes.otherPages);
 //========================================================//
 
 

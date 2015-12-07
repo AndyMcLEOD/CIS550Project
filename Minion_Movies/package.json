@@ -18,6 +18,7 @@
     "node-bing-api": "*",
     "passport": "*",
     "passport-facebook": "*",
-    "passport-local": "*"
+    "passport-local": "*",
+    "twilio": "*"
   }
 }

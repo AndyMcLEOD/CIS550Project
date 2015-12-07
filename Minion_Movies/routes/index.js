@@ -11,6 +11,7 @@ var connection = mysql.createConnection({
 	password: '1234567890',
 	database: 'MinionMovies'
 });
+var client = require('twilio')('ACe3c8c9849b5be824115062a855c46ac5', '96f1357b818fad457aad3b99944c63c4');
 connection.connect();
 
 
@@ -621,6 +622,28 @@ exports.getPost = function(req, res){
 	});
 }
 
+exports.getTextForm = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	res.render('msg');
+}
+
+exports.sendMsg = function(req, res){
+	if(!req.isAuthenticated()){ res.redirect('/'); return; }
+	var number = "+1" + req.body.number;
+	var message = "Hi, you have a message from your friend " + req.user.name + ": " + req.body.message;
+	console.log(message);
+	client.sendMessage({
+		to: number,
+		from: '+13103214348',
+		body: message
+	}, function(err, data){
+		if(err)
+			console.log(err);
+		console.log(data);
+		res.redirect('/profile');
+	});	
+}
+
 exports.results = function(req, res){
 	var isLogin = false;
 	if(req.isAuthenticated()){ isLogin = true; }
@@ -827,4 +850,10 @@ exports.get_classes = function(req, res){
 		  });
 	});
 }
+
+
+
+
+
+
 
