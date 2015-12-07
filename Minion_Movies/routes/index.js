@@ -1,8 +1,4 @@
 
-/*
- * GET home page.
- */
-
 
 var mysql = require('mysql');
 var connection = mysql.createConnection({
@@ -13,7 +9,7 @@ var connection = mysql.createConnection({
 });
 var client = require('twilio')('ACe3c8c9849b5be824115062a855c46ac5', '96f1357b818fad457aad3b99944c63c4');
 connection.connect();
-
+exports.connection = connection;
 
 exports.getMovies = function(req, res){
 	var string = "h'h'h'h'";

@@ -1,12 +1,4 @@
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-	host: 'cis550courseproject.cojm56uytqf8.us-east-1.rds.amazonaws.com',
-	user: 'MinionMovies',
-	password: '1234567890',
-	database: 'MinionMovies'
-});
-connection.connect();
-
+var connection = require('./index.js').connection;
 var server = require("../app.js").server;
 var io = require('socket.io').listen(server);
 
@@ -21,7 +13,7 @@ io.on('connection', function(socket){
 	if(rooms[rname] == undefined){
 
 		rooms[rname] = {};
-		rooms[rname]["colorspace"] = [ "color:LightSkyBlue;", "color:LightGreen;", "color:LightCyan;", "color:red;", "color:Orange;", "color:Gold;"];
+		rooms[rname]["colorspace"] = [ "color:Blue;", "color:LawnGreen;", "color:Cyan;", "color:Orange;", "color:Gold;", "color:Crimson;", "color:Khaki;", "color:Lavender;"];
 	}
 
 	var user = {};

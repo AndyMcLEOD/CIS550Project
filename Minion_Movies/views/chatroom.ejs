@@ -2,21 +2,23 @@
 <html>
   <head>
     <title> <%= title %> </title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!-- load fontawesome -->
+    <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="../../stylesheets/style.css">
     <style>
-      body { background-color: black ; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; right:0; width: 80%; }
+      form { padding: 3px; position: fixed; bottom: 0; right:0; width: 80%; }
       form input { border: 0; padding: 10px; width: 85%; margin-right: .5%; }
       form button { width: 12.5%; background: rgb(0, 102, 255); border: none; padding: 10px; color:white; }
-      #messages { list-style-type: none; padding: 0; margin-top:60px; margin-bottom:60px }
+      #messages { list-style-type: none; padding: 0; margin-top:30px; margin-bottom:50px }
       #messages li { padding: 5px 10px; font-size:20px }
       #people { margin: 0; padding: 0;} 
-      #people li { font-size:20px; text-align: center; background: black;}
+      #people li { list-style-type: none; font-size:20px; text-align: center; padding: 2px }
 
       #side span { 
 
           color:LawnGreen; 
           font-size: 30px;
-          background-color: black;
           text-align: center;
           border-bottom-style: solid;
           border-bottom-width: 2px;
@@ -34,17 +36,16 @@
         .container .content {
 
           width: 1200px;
-          background-color: black ;
           left: 0;        
         }
           
         .container .sidebar {
 
           position: fixed;
-          background-color: black ;
           width: 200px;
-          top: 0;
-          right: 0;
+          top: 140px;
+          right: 50px;
+          min-height: 300px;
           border-style: solid;
           border-width: 2px;
           border-color: LawnGreen;
@@ -53,10 +54,16 @@
     </style>
     </head>
     <body>
+      <nav class="navbar navbar-default" style="top: 20px; position:fixed">
+          <div class="container-fluid">
+            <div class="navbar-header" style="text-align:center;">
+              <a class="navbar-brand" style="font-size:35px; color:white;"><%= title %></a>
+            </div>
+          </div>
+        </nav>
     <table class="container">
       <tr>
         <td class="content">
-          <h2 class="header" style="color:LightBlue; border-bottom-style: solid; border-bottom-color:LightBlue; width: 1200px; position: fixed; text-align:center; top: 0; font-size: 30px" > <%= title %> </h2>
             <ul id="messages"></ul>
             <form action = "/chatroom">
               <input id="m" autocomplete="off" /><button type="submit">Send</button>

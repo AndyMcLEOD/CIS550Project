@@ -1,7 +1,5 @@
 var key = "NIA1QuVOHk5v2aSPsh4Ify1Q43YjraKYFqVQkGrqpFA";
 var Bing = require('node-bing-api')({ accKey: key });
-console.log("Successfully connected to Bing! search engine...")
-
 
 exports.postSearchResults = function(request, response){
 
