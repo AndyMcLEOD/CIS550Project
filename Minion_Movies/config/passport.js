@@ -24,7 +24,7 @@ module.exports = function(passport){
 	passport.use(new FacebookStrategy({
 		clientID: '454728868060496',
 		clientSecret: '338c5b532e4f897e801fee55a9de4b9c',
-		callbackURL: 'https://floating-refuge-5836.herokuapp.com/auth/facebook/callback',
+		callbackURL: 'http://ec2-52-91-185-158.compute-1.amazonaws.com/auth/facebook/callback',
 		profileFields: ['id', 'displayName', 'name', 'gender', 'profileUrl', 'emails', 'photos'], 
         passReqToCallback: true
 	},
